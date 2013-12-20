@@ -1,9 +1,9 @@
-import bingo.Bingo;
+import bingo.*;
 import java.io.*;
 import java.net.*;
 
 public class BingoServer{
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
             System.err.println("Usage: java EchoServer <port number>");
@@ -24,7 +24,7 @@ public class BingoServer{
             String inputLine, outputLine;
              
             // Initiate conversation with client
-           	outputLine = " ";
+           	outputLine = "Write a message:";
             out.println(outputLine);
  
             while ((inputLine = in.readLine()) != null) {

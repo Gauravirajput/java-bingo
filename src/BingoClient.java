@@ -1,4 +1,4 @@
-import bingo.Bingo;
+import bingo.*;
 import java.io.*; 
 import java.net.*;
 
@@ -14,12 +14,20 @@ public class BingoClient{
         String hostName = args[0];
         int portNumber = Integer.parseInt(args[1]);
 
+
         try (
             Socket kkSocket = new Socket(hostName, portNumber);
             PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(kkSocket.getInputStream()));
         ) {
+        	Bingo model = new Bingo();
+        	BingoView view = new BingoView();
+
+        	BingoController controller = new BingoController(model, view);
+
+			controller.displayMainPage();
+
             BufferedReader stdIn =
                 new BufferedReader(new InputStreamReader(System.in));
             String fromServer;
