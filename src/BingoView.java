@@ -4,14 +4,19 @@ import java.awt.*;
 import javax.swing.*;
 
 // View class
-public class BingoView{
+public class BingoView
+{
+	private JFrame frame;
+
+	public BingoView()
+	{
+		//Create and set up the window.
+        frame = new JFrame("Bingo");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
 
 	public void displayMainPage()
 	{
-		//Create and set up the window.
-        JFrame frame = new JFrame("Bingo");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
- 
  		GridLayout mainPage = new GridLayout(2,2);
         JPanel mainPagePanel = new JPanel();
         mainPagePanel.setLayout(mainPage);
