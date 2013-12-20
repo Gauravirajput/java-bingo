@@ -1,12 +1,14 @@
 package bingo;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 // View class
 public class BingoView
 {
 	private JFrame frame;
+	private int numberOfCards = 0;
 
 	public BingoView()
 	{
@@ -15,7 +17,17 @@ public class BingoView
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	public void displayMainPage()
+	class MainPageListener extends MouseAdapter
+	{
+		public void mouseClicked(MouseEvent e)
+		{
+			JButton button = (JButton)e.getSource();
+            char label = button.getText().charAt(0);
+            numberOfCards = Character.getNumericValue(label);
+		}
+	}
+
+	public int displayMainPage()
 	{
  		GridLayout mainPage = new GridLayout(2,2);
         JPanel mainPagePanel = new JPanel();
@@ -34,9 +46,15 @@ public class BingoView
 
         // Add mainPage to the frame
         frame.getContentPane().add(mainPagePanel);
+        oneCard.addMouseListener(new MainPageListener());
+        twoCards.addMouseListener(new MainPageListener());
+        threeCards.addMouseListener(new MainPageListener());
+        fourCards.addMouseListener(new MainPageListener());
  
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+
+        return numberOfCards;
 	}
 }

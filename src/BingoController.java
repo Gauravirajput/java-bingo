@@ -11,8 +11,8 @@ public class BingoController{
 		this.view = view;
 	}
 
-	public void displayMainPage()
+	public int displayMainPage()
 	{
-		view.displayMainPage();
+		return view.displayMainPage();
 	}
 }

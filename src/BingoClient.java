@@ -16,17 +16,18 @@ public class BingoClient{
 
 
         try (
-            Socket kkSocket = new Socket(hostName, portNumber);
-            PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+            Socket clientSocket = new Socket(hostName, portNumber);
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(
-                new InputStreamReader(kkSocket.getInputStream()));
+                new InputStreamReader(clientSocket.getInputStream()));
         ) {
         	Bingo model = new Bingo();
         	BingoView view = new BingoView();
 
         	BingoController controller = new BingoController(model, view);
 
-			controller.displayMainPage();
+			int cards = controller.displayMainPage();
+			System.out.println(cards);
 
             BufferedReader stdIn =
                 new BufferedReader(new InputStreamReader(System.in));
