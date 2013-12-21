@@ -22,17 +22,17 @@ public class BingoServer{
         ) {
          
             String inputLine, outputLine;
+            int cards;
              
             // Initiate conversation with client
-           	outputLine = "Write a message:";
+           	outputLine = "Welcome to Bingo!";
             out.println(outputLine);
+
+            // Get input from client
+            cards = Integer.parseInt(in.readLine());
+            System.out.println("Cards from client: " + cards);
  
-            while ((inputLine = in.readLine()) != null) {
-                outputLine = inputLine + " from server";
-                out.println(outputLine);
-                if (outputLine.equals("Bye."))
-                    break;
-            }
+            
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
                 + portNumber + " or listening for a connection");

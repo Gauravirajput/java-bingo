@@ -3,6 +3,7 @@ package bingo;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 // View class
 public class BingoView
@@ -29,32 +30,57 @@ public class BingoView
 
 	public int displayMainPage()
 	{
- 		GridLayout mainPage = new GridLayout(2,2);
-        JPanel mainPagePanel = new JPanel();
-        mainPagePanel.setLayout(mainPage);
+        Object[] cards = {"1", "2", "3"};
 
-        // Initialize grid layout and several buttons for number of cards
-		JButton oneCard = new JButton("1 Card");
-		JButton twoCards = new JButton("2 Cards");
-		JButton threeCards = new JButton("3 Cards");
-		JButton fourCards = new JButton("4 Cards");
+        String numberOfCard = (String)JOptionPane.showInputDialog(
+                    frame,
+                    "Select number of cards",
+                    "select cards",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    cards,
+                    "ham");
 
-        mainPagePanel.add(oneCard);
-        mainPagePanel.add(twoCards);
-        mainPagePanel.add(threeCards);
-        mainPagePanel.add(fourCards);
+        return Integer.parseInt(numberOfCard);
+	}
 
-        // Add mainPage to the frame
-        frame.getContentPane().add(mainPagePanel);
-        oneCard.addMouseListener(new MainPageListener());
-        twoCards.addMouseListener(new MainPageListener());
-        threeCards.addMouseListener(new MainPageListener());
-        fourCards.addMouseListener(new MainPageListener());
- 
+    public void displayCards(int numberOfCards, int[][] cards)
+    {
+        GridLayout mainPage = new GridLayout(0, numberOfCards);
+        JPanel mainPanel = new JPanel();
+        
+        mainPanel.setLayout(mainPage);
+
+        for(int j = 0; j < numberOfCards; ++j)
+        {
+            GridLayout cardLayout = new GridLayout(6,5);
+            JPanel cardPanel = new JPanel();
+            cardPanel.setLayout(cardLayout);
+            cardPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
+
+            // Initialize grid layout and several buttons for number of cards
+            String[] alphabet = {"B", "I", "N", "G", "O"};
+            for(int i = 0; i < 5; ++i)
+            {
+                JLabel l = new JLabel(alphabet[i], SwingConstants.CENTER);
+                cardPanel.add(l);
+            }
+
+            JButton[] numberButtons = new JButton[25];
+            for(int i = 0; i < 25; ++i)
+            { 
+                numberButtons[i] = new JButton(Integer.toString(cards[j][i]));
+                cardPanel.add(numberButtons[i]);
+            }
+
+            mainPanel.add(cardPanel);
+        }
+
+        frame.getContentPane().add(mainPanel);
+    
         //Display the window.
         frame.pack();
         frame.setVisible(true);
+    }
 
-        return numberOfCards;
-	}
 }

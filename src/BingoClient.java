@@ -21,30 +21,21 @@ public class BingoClient{
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));
         ) {
+            String fromServer;
+            fromServer = in.readLine();
+            System.out.println(fromServer);
+
+            //Initialize bingo instance and prompt users to select number of cards
         	Bingo model = new Bingo();
         	BingoView view = new BingoView();
 
         	BingoController controller = new BingoController(model, view);
 
 			int cards = controller.displayMainPage();
-			System.out.println(cards);
+			out.println(cards);
 
-            BufferedReader stdIn =
-                new BufferedReader(new InputStreamReader(System.in));
-            String fromServer;
-            String fromUser;
+            controller.displayCards(cards);
 
-            while ((fromServer = in.readLine()) != null) {
-                System.out.println("Server: " + fromServer);
-                if (fromServer.equals("Bye."))
-                    break;
-                
-                fromUser = stdIn.readLine();
-                if (fromUser != null) {
-                    System.out.println("Client: " + fromUser);
-                    out.println(fromUser);
-                }
-            }
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
