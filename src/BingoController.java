@@ -31,7 +31,7 @@ public class BingoController{
 		view.displayCards(numberOfCards, cards);
 	}
 
-	public int[] getCallSequence()
+	public String[] getCallSequence()
 	{
 		return model.getCallSequence();
 	}

@@ -38,18 +38,19 @@ public class BingoServer{
             System.out.println("Cards from client: " + cards);
 
             //get a list of randomized numbers to be called
-            int[] numbers = controller.getCallSequence();
+            String[] numbers = controller.getCallSequence();
             for(int i = 0; i < 75; ++i)
             {
-                // try
-                // {
-                //     TimeUnit.SECONDS.sleep(5);
-                // }
-                // catch(Exception e)
-                // {
-                //     e.printStackTrace();
-                // }
+                try
+                {
+                    TimeUnit.SECONDS.sleep(1);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
                 System.out.println(numbers[i]);
+                out.println(numbers[i]);
             }
  
             

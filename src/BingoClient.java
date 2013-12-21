@@ -14,7 +14,6 @@ public class BingoClient{
         String hostName = args[0];
         int portNumber = Integer.parseInt(args[1]);
 
-
         try (
             Socket clientSocket = new Socket(hostName, portNumber);
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
