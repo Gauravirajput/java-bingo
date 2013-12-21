@@ -30,4 +30,9 @@ public class BingoController{
 
 		view.displayCards(numberOfCards, cards);
 	}
+
+	public int[] getCallSequence()
+	{
+		return model.getCallSequence();
+	}
 }

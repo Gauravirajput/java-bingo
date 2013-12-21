@@ -4,7 +4,7 @@ import java.util.*;
 // Model class
 public class Bingo
 {
-	static int[][] getFullRandomizedSet()
+	public int[][] getFullRandomizedSet()
   	{
   		// storing the complete list of randomized card set
   		int[][] numbers = new int[5][15];
@@ -29,6 +29,28 @@ public class Bingo
 		     	numbers[j][index] = numbers[j][i];
 		     	numbers[j][i] = a;
 	    	}
+    	}
+
+    	return numbers;	
+  	}
+
+  	public int[] getCallSequence()
+  	{
+  		int[] numbers = new int[75];
+  		for(int i = 0; i < 75; ++i)
+		{
+			numbers[i] = i + 1;
+		}
+
+    	//randomize the list
+    	Random rnd = new Random();
+		for (int i = numbers.length - 1; i > 0; i--)
+    	{
+	     	int index = rnd.nextInt(i + 1);
+	     	// Simple swap
+	     	int a = numbers[index];
+	     	numbers[index] = numbers[i];
+	     	numbers[i] = a;
     	}
 
     	return numbers;	

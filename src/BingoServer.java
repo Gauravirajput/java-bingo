@@ -1,6 +1,7 @@
 import bingo.*;
 import java.io.*;
 import java.net.*;
+import java.util.concurrent.TimeUnit;
 
 public class BingoServer{
 	public static void main(String[] args) throws IOException
@@ -20,6 +21,10 @@ public class BingoServer{
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));
         ) {
+            //Initialize bingo instance and prompt users to select number of cards
+            Bingo model = new Bingo();
+            BingoView view = new BingoView();
+            BingoController controller = new BingoController(model, view);
          
             String inputLine, outputLine;
             int cards;
@@ -31,6 +36,21 @@ public class BingoServer{
             // Get input from client
             cards = Integer.parseInt(in.readLine());
             System.out.println("Cards from client: " + cards);
+
+            //get a list of randomized numbers to be called
+            int[] numbers = controller.getCallSequence();
+            for(int i = 0; i < 75; ++i)
+            {
+                // try
+                // {
+                //     TimeUnit.SECONDS.sleep(5);
+                // }
+                // catch(Exception e)
+                // {
+                //     e.printStackTrace();
+                // }
+                System.out.println(numbers[i]);
+            }
  
             
         } catch (IOException e) {

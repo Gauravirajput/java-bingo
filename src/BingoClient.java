@@ -36,6 +36,12 @@ public class BingoClient{
 
             controller.displayCards(cards);
 
+            for(int i = 0; i < 75; ++i)
+            {
+                fromServer = in.readLine();
+                System.out.println(fromServer);
+            }
+
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
             System.exit(1);

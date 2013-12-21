@@ -28,6 +28,15 @@ public class BingoView
 		}
 	}
 
+    class BingoButtonListener extends MouseAdapter
+    {
+        public void mouseClicked(MouseEvent e)
+        {
+            JButton button = (JButton)e.getSource();
+            button.setBackground(Color.GRAY);
+        }
+    }
+
 	public int displayMainPage()
 	{
         Object[] cards = {"1", "2", "3", "4"};
@@ -50,6 +59,15 @@ public class BingoView
         JPanel mainPanel = new JPanel();
         
         mainPanel.setLayout(mainPage);
+
+        JButton[] bingoButton = new JButton[3];
+        for(int i = 0; i < numberOfCards; ++i)
+        {
+            JButton b = new JButton("BINGO!");
+            bingoButton[i] = b;
+            bingoButton[i].addMouseListener(new BingoButtonListener());
+        }
+        
 
         for(int j = 0; j < numberOfCards; ++j)
         {
@@ -78,9 +96,9 @@ public class BingoView
                 cardPanel.add(numberButtons[i]);
             }
 
-            JButton bingoButton = new JButton("BINGO!");
+            
             bingoPanel.add(cardPanel, BorderLayout.NORTH);
-            bingoPanel.add(bingoButton, BorderLayout.EAST);
+            bingoPanel.add(bingoButton[j], BorderLayout.EAST);
 
             mainPanel.add(bingoPanel);
         }
