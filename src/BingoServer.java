@@ -43,7 +43,7 @@ public class BingoServer{
             {
                 try
                 {
-                    TimeUnit.SECONDS.sleep(1);
+                    TimeUnit.SECONDS.sleep(5);
                 }
                 catch(Exception e)
                 {

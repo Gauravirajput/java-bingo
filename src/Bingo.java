@@ -53,7 +53,6 @@ public class Bingo
 	     	int a = numbers[index];
 	     	numbers[index] = numbers[i];
 	     	numbers[i] = a;
-	     	System.out.println("i:" + numbers[i]);
 
 	     	//assign to String data type with alphabets
 	     	String prefix;
