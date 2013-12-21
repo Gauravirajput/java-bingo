@@ -46,7 +46,6 @@ public class Bingo
 
     	//randomize the list
     	Random rnd = new Random();
-    	System.out.println("===============BEGIN=============");
 		for (int i = numbers.length - 1; i >= 0; i--)
     	{
 	     	int index = rnd.nextInt(i + 1);
@@ -83,16 +82,7 @@ public class Bingo
 	     		prefix = "";
 	     	}
 	     	sequence[i] = prefix + numbers[i];
-
-	     	System.out.println("i:" + i + " : " + sequence[i]);
     	}
-
-    	
-    	// for(int i = 0; i < 75; ++i)
-    	// {
-    	// 	System.out.println("i:" + i + " : " + sequence[i]);
-    	// }
-    	System.out.println("===============END=============");
 
     	return sequence;	
   	}
