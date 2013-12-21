@@ -18,19 +18,19 @@ public class BingoView
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	class MainPageListener extends MouseAdapter
+	class NumberButtonsListener extends MouseAdapter
 	{
 		public void mouseClicked(MouseEvent e)
 		{
 			JButton button = (JButton)e.getSource();
-            char label = button.getText().charAt(0);
-            numberOfCards = Character.getNumericValue(label);
+            button.setBackground(Color.RED);
+            button.setForeground(Color.WHITE);
 		}
 	}
 
 	public int displayMainPage()
 	{
-        Object[] cards = {"1", "2", "3"};
+        Object[] cards = {"1", "2", "3", "4"};
 
         String numberOfCard = (String)JOptionPane.showInputDialog(
                     frame,
@@ -46,7 +46,7 @@ public class BingoView
 
     public void displayCards(int numberOfCards, int[][] cards)
     {
-        GridLayout mainPage = new GridLayout(0, numberOfCards);
+        GridLayout mainPage = new GridLayout(numberOfCards, 0);
         JPanel mainPanel = new JPanel();
         
         mainPanel.setLayout(mainPage);
@@ -56,7 +56,11 @@ public class BingoView
             GridLayout cardLayout = new GridLayout(6,5);
             JPanel cardPanel = new JPanel();
             cardPanel.setLayout(cardLayout);
-            cardPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
+
+            GridLayout bingoLayout = new GridLayout(2,0);
+            JPanel bingoPanel = new JPanel();
+            //bingoPanel.setLayout(bingoLayout);
+            bingoPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 
             // Initialize grid layout and several buttons for number of cards
             String[] alphabet = {"B", "I", "N", "G", "O"};
@@ -70,10 +74,15 @@ public class BingoView
             for(int i = 0; i < 25; ++i)
             { 
                 numberButtons[i] = new JButton(Integer.toString(cards[j][i]));
+                numberButtons[i].addMouseListener(new NumberButtonsListener());
                 cardPanel.add(numberButtons[i]);
             }
 
-            mainPanel.add(cardPanel);
+            JButton bingoButton = new JButton("BINGO!");
+            bingoPanel.add(cardPanel, BorderLayout.NORTH);
+            bingoPanel.add(bingoButton, BorderLayout.EAST);
+
+            mainPanel.add(bingoPanel);
         }
 
         frame.getContentPane().add(mainPanel);
