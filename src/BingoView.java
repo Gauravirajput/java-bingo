@@ -8,8 +8,17 @@ import javax.swing.border.*;
 // View class
 public class BingoView
 {
-	private JFrame frame;
-	private int numberOfCards = 0;
+    //TODO setup global variable for pattern if user clicked BINGO
+    //TODO make server listen to client for bingo
+
+    // the array to store values inside the card when bingo is called
+    int[][] bingoPattern;
+    int numOfCards;
+    int[][] bingoCards;
+
+    private JFrame frame;
+    private JButton[] bingoButton = new JButton[3];
+    private JButton[][] numberButtons;
 
 	public BingoView()
 	{
@@ -18,21 +27,48 @@ public class BingoView
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	class NumberButtonsListener extends MouseAdapter
+	class NumberButtonsListener implements ActionListener
 	{
-		public void mouseClicked(MouseEvent e)
+		public void actionPerformed(ActionEvent e)
 		{
-			JButton button = (JButton)e.getSource();
+            JButton button = (JButton)e.getSource();
+            String number = e.getActionCommand();
+            outerloop:
+            for(int j = 0; j < numOfCards; ++j)
+            {
+                for(int i = 0; i < 25; ++i)
+                {
+                    String comp = Integer.toString(bingoCards[j][i]);
+                    if(button == numberButtons[j][i])
+                    {
+                        bingoPattern[j][i] = 1;
+                    }  
+                }
+            }
+
             button.setBackground(Color.RED);
             button.setForeground(Color.WHITE);
 		}
 	}
 
-    class BingoButtonListener extends MouseAdapter
+    class BingoButtonListener implements ActionListener
     {
-        public void mouseClicked(MouseEvent e)
+        public void actionPerformed(ActionEvent e)
         {
             JButton button = (JButton)e.getSource();
+
+            for(int i = 0; i < numOfCards; ++i)
+            {
+                if(button == bingoButton[i])
+                {
+                    for(int j = 0; j < 25; ++j)
+                    {
+                        System.out.print(bingoPattern[i][j] + " ");
+                    }
+                    System.out.println("");
+                }
+            }
+
             button.setBackground(Color.GRAY);
         }
     }
@@ -55,29 +91,31 @@ public class BingoView
 
     public void displayCards(int numberOfCards, int[][] cards)
     {
+        //initialize the global variables
+        numOfCards = numberOfCards;
+        bingoCards = cards;
+        bingoPattern = new int[numberOfCards][25];
+
         GridLayout mainPage = new GridLayout(numberOfCards, 0);
         JPanel mainPanel = new JPanel();
         
         mainPanel.setLayout(mainPage);
 
-        JButton[] bingoButton = new JButton[3];
         for(int i = 0; i < numberOfCards; ++i)
         {
             JButton b = new JButton("BINGO!");
             bingoButton[i] = b;
-            bingoButton[i].addMouseListener(new BingoButtonListener());
+            bingoButton[i].addActionListener(new BingoButtonListener());
         }
         
-
+        numberButtons = new JButton[numberOfCards][25];
         for(int j = 0; j < numberOfCards; ++j)
         {
             GridLayout cardLayout = new GridLayout(6,5);
             JPanel cardPanel = new JPanel();
             cardPanel.setLayout(cardLayout);
 
-            GridLayout bingoLayout = new GridLayout(2,0);
             JPanel bingoPanel = new JPanel();
-            //bingoPanel.setLayout(bingoLayout);
             bingoPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 
             // Initialize grid layout and several buttons for number of cards
@@ -88,23 +126,22 @@ public class BingoView
                 cardPanel.add(l);
             }
 
-            JButton[] numberButtons = new JButton[25];
+            
             for(int i = 0; i < 25; ++i)
             { 
-                numberButtons[i] = new JButton(Integer.toString(cards[j][i]));
-                numberButtons[i].addMouseListener(new NumberButtonsListener());
-                cardPanel.add(numberButtons[i]);
+                numberButtons[j][i] = new JButton(Integer.toString(cards[j][i]));
+                numberButtons[j][i].addActionListener(new NumberButtonsListener());
+                cardPanel.add(numberButtons[j][i]);
             }
-
             
             bingoPanel.add(cardPanel, BorderLayout.NORTH);
             bingoPanel.add(bingoButton[j], BorderLayout.EAST);
-
             mainPanel.add(bingoPanel);
         }
 
         frame.getContentPane().add(mainPanel);
     
+
         //Display the window.
         frame.pack();
         frame.setVisible(true);
