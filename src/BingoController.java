@@ -35,4 +35,9 @@ public class BingoController{
 	{
 		return model.getCallSequence();
 	}
+
+	public void updateDisplayNumber(String fromServer)
+	{
+		view.updateDisplayNumber(fromServer);
+	}
 }

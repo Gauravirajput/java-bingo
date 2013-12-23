@@ -80,7 +80,7 @@ public class Bingo
 	     	{
 	     		prefix = "";
 	     	}
-	     	sequence[i] = prefix + numbers[i];
+     		sequence[i] = prefix + numbers[i];
     	}
 
     	return sequence;	

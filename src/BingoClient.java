@@ -3,6 +3,7 @@ import java.io.*;
 import java.net.*;
 
 public class BingoClient{
+
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 2) {
@@ -38,7 +39,7 @@ public class BingoClient{
             for(int i = 0; i < 75; ++i)
             {
                 fromServer = in.readLine();
-                System.out.println(fromServer);
+                controller.updateDisplayNumber(fromServer);
             }
 
         } catch (UnknownHostException e) {
