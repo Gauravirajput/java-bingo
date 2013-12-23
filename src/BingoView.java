@@ -58,13 +58,21 @@ public class BingoView
                     String comp = Integer.toString(bingoCards[j][i]);
                     if(button == numberButtons[j][i])
                     {
-                        bingoPattern[j][i] = 1;
+                        if(bingoPattern[j][i] == 1)
+                        {
+                            bingoPattern[j][i] = 0;
+                            button.setBackground(null);
+                            button.setForeground(Color.BLACK);
+                        }
+                        else
+                        {
+                            bingoPattern[j][i] = 1;
+                            button.setBackground(Color.RED);
+                            button.setForeground(Color.WHITE);
+                        }
                     }  
                 }
-            }
-
-            button.setBackground(Color.RED);
-            button.setForeground(Color.WHITE);
+            }   
 		}
 	}
 
