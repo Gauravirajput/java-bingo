@@ -4,11 +4,16 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Observer;
+import java.util.Observable;
+
+interface View {
+    public void addObserver(Observer o);
+}
 
 // View class
-public class BingoView
-{
+public class BingoView extends Observable implements View{
     //TODO make server listen to client for bingo
 
     // the array to store values inside the card when bingo is called
@@ -59,41 +64,50 @@ public class BingoView
         return Integer.parseInt(numberOfCard);
 	}
 
-    public void updateDisplayNumber(String number)
+    public void updateDisplayNumber(final String number)
     {
-        numberDisplay.setText(number);
-        numberDisplay.setForeground(Color.red);
+        SwingWorker<Void, Void> worker = new SwingWorker<Void,Void>()
+        {
+            @Override
+            protected Void doInBackground() throws Exception{
+                numberDisplay.setText(number);
+                numberDisplay.setForeground(Color.red);
 
-        int n = Integer.parseInt(number.substring(1));
-        int column = -1;
-        if(n >= 1 && n <= 15)
-        {
-            column = 0;
-        }
-        else if(n >= 16 && n <= 30)
-        {
-            column = 1;
-        }
-        else if(n >= 31 && n <= 45)
-        {
-            column = 2;
-        }
-        else if(n >= 46 && n <= 60)
-        {
-            column = 3;
-        }
-        else if(n >= 61 && n <= 75)
-        {
-            column = 4;
-        }
-        else
-        {
-            column = -1;
-        }
+                int n = Integer.parseInt(number.substring(1));
+                int column = -1;
+                if(n >= 1 && n <= 15)
+                {
+                    column = 0;
+                }
+                else if(n >= 16 && n <= 30)
+                {
+                    column = 1;
+                }
+                else if(n >= 31 && n <= 45)
+                {
+                    column = 2;
+                }
+                else if(n >= 46 && n <= 60)
+                {
+                    column = 3;
+                }
+                else if(n >= 61 && n <= 75)
+                {
+                    column = 4;
+                }
+                else
+                {
+                    column = -1;
+                }
 
-        int row = n - (column * 15) - 1;
+                int row = n - (column * 15) - 1;
 
-        completeList[row][column].setBackground(Color.green);
+                completeList[row][column].setBackground(Color.green);
+                return null;
+            }
+        };
+
+        worker.execute();
     }
 
     public void displayCards(int numberOfCards, int[][] cards)
@@ -122,11 +136,9 @@ public class BingoView
                     {
                         if(button == bingoButton[i])
                         {
-                            for(int j = 0; j < 25; ++j)
-                            {
-                                System.out.print(bingoPattern[i][j] + " ");
-                            }
-                            System.out.println("");
+                            setChanged();
+                            notifyObservers(bingoPattern[i]);
+                            break;
                         }
                     }
 

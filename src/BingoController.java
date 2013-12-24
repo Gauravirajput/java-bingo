@@ -1,7 +1,12 @@
 package bingo;
 
+import java.util.Observer;
+import java.util.Observable;
+import java.util.Arrays;
+import java.util.ArrayList;
+
 // Controller class
-public class BingoController{
+public class BingoController implements Observer{
 	private Bingo model;
 	private BingoView view;
 
@@ -9,6 +14,7 @@ public class BingoController{
 	{
 		this.model = model;
 		this.view = view;
+		view.addObserver(this);
 	}
 
 	public int displayMainPage()
@@ -39,5 +45,17 @@ public class BingoController{
 	public void updateDisplayNumber(String fromServer)
 	{
 		view.updateDisplayNumber(fromServer);
+	}
+
+	//When user clicked Bingo, get the pattern
+	@Override
+	public void update(Observable o, Object arg)
+	{
+		int[] pattern = (int[]) arg;
+		for(int j = 0; j < 25; ++j)
+        {
+            System.out.print(pattern[j] + " ");
+        }
+        System.out.println("");
 	}
 }
