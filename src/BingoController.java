@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public class BingoController implements Observer{
 	private Bingo model;
 	private BingoView view;
+	private boolean bingoStatus = false;
+	private int[] bingoPattern;
 
 	public BingoController(Bingo model, BingoView view)
 	{
@@ -47,15 +49,37 @@ public class BingoController implements Observer{
 		view.updateDisplayNumber(fromServer);
 	}
 
+	public boolean getBingoStatus()
+	{
+		boolean status = bingoStatus;
+		bingoStatus = false;
+		return status;
+	}
+
+	public int[] getPattern()
+	{
+		int[] pattern = bingoPattern;
+		//Arrays.fill(pattern, 0);
+		showPattern("Controller getPattern", pattern);
+		return pattern;
+	}
+
 	//When user clicked Bingo, get the pattern
 	@Override
 	public void update(Observable o, Object arg)
 	{
-		int[] pattern = (int[]) arg;
-		for(int j = 0; j < 25; ++j)
-        {
-            System.out.print(pattern[j] + " ");
-        }
-        System.out.println("");
+		bingoPattern = (int[]) arg;
+		showPattern("Controller update", bingoPattern);
+		bingoStatus = true;
+	}
+
+	public static void showPattern(String message, int[] pattern)
+	{
+		System.out.println(message);
+		for(int i = 0; i < 25; ++i)
+		{
+			System.out.print(pattern[i] + " ");
+		}
+		System.out.println(" ");
 	}
 }

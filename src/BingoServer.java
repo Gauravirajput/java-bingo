@@ -52,9 +52,8 @@ public class BingoServer{
                 System.out.println(numbers[i]);
                 out.println(numbers[i]);
 
-                //TODO: receive one of any of the client win the game. 
-                //and then identify which client sent the message.
-                //he/she will win first.
+                // inputLine = in.readLine();
+                // System.out.println(inputLine);
             }
  
             

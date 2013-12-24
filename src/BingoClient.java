@@ -4,6 +4,16 @@ import java.net.*;
 
 public class BingoClient{
 
+    public static void showPattern(String message, int[] pattern)
+    {
+        System.out.println(message);
+        for(int i = 0; i < 25; ++i)
+        {
+            System.out.print(pattern[i] + " ");
+        }
+        System.out.println(" ");
+    }
+
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 2) {
@@ -40,6 +50,13 @@ public class BingoClient{
             {
                 fromServer = in.readLine();
                 controller.updateDisplayNumber(fromServer);
+                boolean win = controller.getBingoStatus();
+                if(win)
+                {
+                    int[] pattern = controller.getPattern();
+                    showPattern("BingoClient", pattern);
+                    System.out.println(pattern.toString());
+                }
             }
 
         } catch (UnknownHostException e) {
