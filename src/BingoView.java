@@ -48,6 +48,64 @@ public class BingoView extends Observable implements View{
         numberDisplay.setFont(new Font("Serif", Font.PLAIN, 60));
 	}
 
+    //Event Listeners
+   class NumberButtonsListener implements ActionListener
+   {
+        public void actionPerformed(ActionEvent e)
+        {
+            JButton button = (JButton)e.getSource();
+            String number = e.getActionCommand();
+            outerloop:
+            for(int j = 0; j < numOfCards; ++j)
+            {
+                for(int i = 0; i < 25; ++i)
+                {
+                    String comp = Integer.toString(bingoCards[j][i]);
+                    if(button == numberButtons[j][i])
+                    {
+                        if(bingoPattern[j][i] == 1)
+                        {
+                            bingoPattern[j][i] = 0;
+                            button.setBackground(null);
+                            button.setForeground(Color.BLACK);
+                        }
+                        else
+                        {
+                            bingoPattern[j][i] = 1;
+                            button.setBackground(Color.RED);
+                            button.setForeground(Color.WHITE);
+                        }
+                    }  
+                }
+            }   
+        }
+    }
+ 
+    class BingoButtonListener implements ActionListener
+    {
+        public void actionPerformed(ActionEvent e)
+        {
+             JButton button = (JButton)e.getSource();
+ 
+             for(int i = 0; i < numOfCards; ++i)
+            {
+                if(button == bingoButton[i])
+                {
+                    System.out.println("From View: ");
+                    for(int j = 0; j < 25; ++j)
+                    {
+                        System.out.print(bingoPattern[i][j] + " ");
+                    }
+                    System.out.println(" ");
+                    setChanged();
+                    notifyObservers(bingoPattern[i]);
+                }
+            }
+ 
+            button.setBackground(Color.GRAY);
+        }
+    }
+
 	public int displayMainPage()
 	{
         Object[] cards = {"1", "2", "3", "4"};
@@ -127,23 +185,7 @@ public class BingoView extends Observable implements View{
         {
             JButton b = new JButton("BINGO!");
             bingoButton[i] = b;
-            bingoButton[i].addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e)
-                {
-                    JButton button = (JButton)e.getSource();
-
-                    for(int i = 0; i < numOfCards; ++i)
-                    {
-                        if(button == bingoButton[i])
-                        {
-                            setChanged();
-                            notifyObservers(bingoPattern[i]);
-                        }
-                    }
-
-                    button.setBackground(Color.GRAY);
-                }
-            });
+            bingoButton[i].addActionListener(new BingoButtonListener());
         }
         
         //initialize each bingo cards
@@ -167,36 +209,7 @@ public class BingoView extends Observable implements View{
             for(int i = 0; i < 25; ++i)
             { 
                 numberButtons[j][i] = new JButton(Integer.toString(cards[j][i]));
-                numberButtons[j][i].addActionListener(new ActionListener(){
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        JButton button = (JButton)e.getSource();
-                        String number = e.getActionCommand();
-                        outerloop:
-                        for(int j = 0; j < numOfCards; ++j)
-                        {
-                            for(int i = 0; i < 25; ++i)
-                            {
-                                String comp = Integer.toString(bingoCards[j][i]);
-                                if(button == numberButtons[j][i])
-                                {
-                                    if(bingoPattern[j][i] == 1)
-                                    {
-                                        bingoPattern[j][i] = 0;
-                                        button.setBackground(null);
-                                        button.setForeground(Color.BLACK);
-                                    }
-                                    else
-                                    {
-                                        bingoPattern[j][i] = 1;
-                                        button.setBackground(Color.RED);
-                                        button.setForeground(Color.WHITE);
-                                    }
-                                }  
-                            }
-                        }   
-                    }
-                });
+                numberButtons[j][i].addActionListener(new NumberButtonsListener());
                 cardPanel.add(numberButtons[j][i]);
             }
             

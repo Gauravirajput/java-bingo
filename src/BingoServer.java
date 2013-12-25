@@ -7,7 +7,7 @@ public class BingoServer{
 
     public static int[] convertPattern(String array)
     {
-        String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+        String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
         int[] convertedPattern = new int[items.length];
 
         System.out.print("from convertPattern");
@@ -19,6 +19,16 @@ public class BingoServer{
         }
 
         return convertedPattern;
+    }
+
+    public static void showPattern(String message, int[] pattern)
+    {
+        System.out.println(message);
+        for(int i = 0; i < 25; ++i)
+        {
+            System.out.print(pattern[i] + " ");
+        }
+        System.out.println(" ");
     }
 
 	public static void main(String[] args) throws IOException
@@ -58,6 +68,13 @@ public class BingoServer{
             //get a list of randomized numbers to be called
             String[] numbers = controller.getCallSequence();
             out.println(Arrays.toString(numbers));
+
+            while(in.readLine() != null)
+            {
+                String patternInput = in.readLine();
+                int[] pattern = convertPattern(patternInput);
+                showPattern("From Server", pattern);
+            }
 
             //     try{
             //         int[] pattern = convertPattern(inputLine);

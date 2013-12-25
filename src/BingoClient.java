@@ -69,16 +69,14 @@ public class BingoClient{
                     e.printStackTrace();
                 }
 
-                //fromServer = in.readLine();
                 controller.updateDisplayNumber(sequence[i]);
-                System.out.println(sequence[i]);
-                // boolean win = controller.getBingoStatus();
-                // if(win)
-                // {
-                //     int[] pattern = controller.getPattern();
-                //     //showPattern("BingoClient", pattern);
-                //     out.println(Arrays.toString(pattern));
-                // }
+                boolean win = controller.getBingoStatus();
+                if(win)
+                {
+                    int[] pattern = controller.getPattern();
+                    //showPattern("BingoClient", pattern);
+                    out.println(Arrays.toString(pattern));
+                }
             }
 
         } catch (UnknownHostException e) {
