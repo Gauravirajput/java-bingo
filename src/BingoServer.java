@@ -1,9 +1,26 @@
 import bingo.*;
 import java.io.*;
 import java.net.*;
-import java.util.concurrent.TimeUnit;
+import java.util.Arrays;
 
 public class BingoServer{
+
+    public static int[] convertPattern(String array)
+    {
+        String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+        int[] convertedPattern = new int[items.length];
+
+        System.out.print("from convertPattern");
+        for (int i = 0; i < items.length; i++) {
+            try {
+                convertedPattern[i] = Integer.parseInt(items[i]);
+                System.out.print(convertedPattern[i] + " ");
+            } catch (NumberFormatException nfe) {};
+        }
+
+        return convertedPattern;
+    }
+
 	public static void main(String[] args) throws IOException
 	{
 		if (args.length != 1) {
@@ -21,6 +38,7 @@ public class BingoServer{
             BufferedReader in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));
         ) {
+
             //Initialize bingo instance and prompt users to select number of cards
             Bingo model = new Bingo();
             BingoView view = new BingoView();
@@ -39,22 +57,20 @@ public class BingoServer{
 
             //get a list of randomized numbers to be called
             String[] numbers = controller.getCallSequence();
-            for(int i = 0; i < 75; ++i)
-            {
-                try
-                {
-                    TimeUnit.SECONDS.sleep(5);
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-                System.out.println(numbers[i]);
-                out.println(numbers[i]);
+            out.println(Arrays.toString(numbers));
 
-                // inputLine = in.readLine();
-                // System.out.println(inputLine);
-            }
+            //     try{
+            //         int[] pattern = convertPattern(inputLine);
+            //         for(int j = 0; j < 25; ++j)
+            //         {
+            //             System.out.print(pattern[j] + " ");
+            //         }
+            //         System.out.println("");
+            //     }
+            //     catch(Exception e)
+            //     {
+            //         e.printStackTrace();
+            //     }
  
             
         } catch (IOException e) {

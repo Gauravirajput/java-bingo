@@ -60,7 +60,7 @@ public class BingoController implements Observer{
 	{
 		int[] pattern = bingoPattern;
 		//Arrays.fill(pattern, 0);
-		showPattern("Controller getPattern", pattern);
+		//showPattern("Controller getPattern", pattern);
 		return pattern;
 	}
 
@@ -69,7 +69,7 @@ public class BingoController implements Observer{
 	public void update(Observable o, Object arg)
 	{
 		bingoPattern = (int[]) arg;
-		showPattern("Controller update", bingoPattern);
+		//showPattern("Controller update", bingoPattern);
 		bingoStatus = true;
 	}
 

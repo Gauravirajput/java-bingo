@@ -1,8 +1,17 @@
 import bingo.*;
 import java.io.*; 
 import java.net.*;
+import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 public class BingoClient{
+
+    public static String[] convertPattern(String array)
+    {
+        String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
+
+        return items;
+    }
 
     public static void showPattern(String message, int[] pattern)
     {
@@ -46,17 +55,30 @@ public class BingoClient{
 
             controller.displayCards(cards);
 
+            String sequenceInput = in.readLine();
+            String[] sequence = convertPattern(sequenceInput);
+
             for(int i = 0; i < 75; ++i)
             {
-                fromServer = in.readLine();
-                controller.updateDisplayNumber(fromServer);
-                boolean win = controller.getBingoStatus();
-                if(win)
+                try
                 {
-                    int[] pattern = controller.getPattern();
-                    showPattern("BingoClient", pattern);
-                    System.out.println(pattern.toString());
+                    TimeUnit.SECONDS.sleep(5);
                 }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+
+                //fromServer = in.readLine();
+                controller.updateDisplayNumber(sequence[i]);
+                System.out.println(sequence[i]);
+                // boolean win = controller.getBingoStatus();
+                // if(win)
+                // {
+                //     int[] pattern = controller.getPattern();
+                //     //showPattern("BingoClient", pattern);
+                //     out.println(Arrays.toString(pattern));
+                // }
             }
 
         } catch (UnknownHostException e) {
