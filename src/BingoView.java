@@ -28,17 +28,6 @@ public class BingoView extends Observable implements View{
     private GridLayout mainPage;
     private JPanel mainPanel = new JPanel();
 
-    private class ListenBingo extends SwingWorker<Void, Void>{
-        @Override
-        protected Void doInBackground(){
-            return null;
-        }
-
-        protected Void process(){
-            return null;
-        }
-    }
-
 	public BingoView()
 	{
 		//Create and set up the window.

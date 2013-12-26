@@ -74,6 +74,15 @@ public class BingoServer{
         cards = Integer.parseInt(in.readLine());
         System.out.println("Cards from client: " + cards);
 
+        //initialize array with n cards and 25 numbers for each card
+        for(int i = 0; i < cards; ++i)
+        {
+            //generate one set of randomized numbers of each card
+            int[] cardSet = model.generateCardSet();
+            showPattern("From server: ", cardSet);
+            out.println(Arrays.toString(cardSet));
+        }
+
         //get a list of randomized numbers to be called
         String[] numbers = controller.getCallSequence();
         out.println(Arrays.toString(numbers));
