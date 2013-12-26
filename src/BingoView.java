@@ -91,12 +91,7 @@ public class BingoView extends Observable implements View{
             {
                 if(button == bingoButton[i])
                 {
-                    System.out.println("From View: ");
-                    for(int j = 0; j < 25; ++j)
-                    {
-                        System.out.print(bingoPattern[i][j] + " ");
-                    }
-                    System.out.println(" ");
+                    //System.out.println("Hello");
                     setChanged();
                     notifyObservers(bingoPattern[i]);
                 }
