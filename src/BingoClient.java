@@ -32,7 +32,7 @@ public class BingoClient{
 
                     for(int i = 0; i < 75; ++i)
                     {
-                        System.out.println("Run by " + Thread.currentThread().getName());
+                        //System.out.println("Run by " + Thread.currentThread().getName());
                         try
                         {
                             Thread.sleep(5000);
@@ -64,17 +64,18 @@ public class BingoClient{
 
                 while(true)
                 {
-                    System.out.println("Run by " + Thread.currentThread().getName());
+                    toServer.flush();
+                    //System.out.println("Run by " + Thread.currentThread().getName());
                     boolean win = controller.getBingoStatus();
                     if(win)
                     {
-                        System.out.println("win");
+                        //System.out.println("win");
                         int[] pattern = controller.getPattern();
                         try
                         {
-                            showPattern("Cropped by handleBingo: " , pattern);
+                            showPattern("banana: " , pattern);
                             toServer.println(Arrays.toString(pattern));
-                            System.out.println("Out to server");
+                            //System.out.println("Out to server");
                         }
                         catch(Exception e)
                         {
@@ -94,11 +95,11 @@ public class BingoClient{
         String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
         int[] convertedArray = new int[items.length];
 
-        System.out.print("from convertPattern");
+        //System.out.println("from convertPattern");
         for (int i = 0; i < items.length; i++) {
             try {
                 convertedArray[i] = Integer.parseInt(items[i]);
-                System.out.print(convertedArray[i] + " ");
+                System.out.println(convertedArray[i] + " ");
             } catch (NumberFormatException nfe) {};
         }
 
@@ -117,7 +118,7 @@ public class BingoClient{
         System.out.println(message);
         for(int i = 0; i < 25; ++i)
         {
-            System.out.print(pattern[i] + " ");
+            System.out.println(pattern[i] + " ");
         }
         System.out.println(" ");
     }
@@ -163,6 +164,7 @@ public class BingoClient{
 
         cards = controller.displayMainPage();
         toServer.println(cards);
+        toServer.flush();
 
 
         cardSets = new int[cards][];
@@ -183,7 +185,7 @@ public class BingoClient{
 
         //input sequence line
         sequenceInput = in.readLine();
-        
+
         //handleGUI and handleBIngo here
         client.handleBingo();
         client.handleGUI();

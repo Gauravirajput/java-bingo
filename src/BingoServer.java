@@ -63,6 +63,8 @@ public class BingoServer{
         BufferedReader in = new BufferedReader(
             new InputStreamReader(clientSocket.getInputStream()));
 
+        System.out.println("Reader ready: " + in.ready());
+
         String inputLine, outputLine;
         int cards;
          
@@ -79,22 +81,28 @@ public class BingoServer{
         {
             //generate one set of randomized numbers of each card
             int[] cardSet = model.generateCardSet();
-            showPattern("From server: ", cardSet);
             out.println(Arrays.toString(cardSet));
         }
 
         //get a list of randomized numbers to be called
         String[] numbers = controller.getCallSequence();
         out.println(Arrays.toString(numbers));
+        out.flush();
+
+        System.out.println("Reader ready: " + in.ready());
 
         while(true)
         {
-            if(in.readLine() != null)
+            String patternInput;
+            if((patternInput = in.readLine()) != null)
             {
-                String patternInput = in.readLine();
+                //String patternInput = in.readLine();
                 int[] pattern = convertPattern(patternInput);
-                //showPattern("From Server", pattern);
+                showPattern("From Server", pattern);
             }  
+            else{
+                System.out.println("not ready to read");
+            }
         }
 	}
 }
