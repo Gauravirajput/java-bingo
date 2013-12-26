@@ -4,6 +4,7 @@ import java.util.*;
 // Model class
 public class Bingo
 {
+	public int[] winningPattern = new int[]{1};
 	public int[][] getFullRandomizedSet()
   	{
   		// storing the complete list of randomized card set
@@ -104,5 +105,74 @@ public class Bingo
     	}
 
 		return cardSet;
+	}
+
+	public boolean checkPattern(int[] pattern, int[] sequence)
+	{
+		boolean win = false;
+		//check winning pattern 1: horizontal lines
+		//i = row, j = column
+		for(int i = 0; i < 5; ++i)
+		{
+			int count = 0;
+			for(int j = 0; j < 5; ++j)
+			{
+				if(pattern[(i * 5) + j] == 1)
+				{
+					count++;
+				}
+			}
+
+			if(count == 5){
+				win = true;
+				break;
+			}
+		}
+
+		//check winning pattern 2: vertical lines
+		if(!win)
+		{
+			for(int i = 0; i < 5; ++i)
+			{
+				int count = 0;
+				for(int j = 0; j < 5; ++j)
+				{
+					if(pattern[(j * 5) + i] == 1)
+					{
+						count++;
+					}
+				}
+
+				if(count == 5){
+					win = true;
+				break;
+				}
+			}
+		}
+
+		//check winning pattern 3: diagonals
+		if(!win)
+		{
+			int[][] interimPattern = new int[][]{{pattern[0],pattern[6],pattern[12],pattern[18],pattern[24]},
+												 {pattern[4],pattern[8],pattern[12],pattern[16],pattern[20]}
+												};
+
+			if(interimPattern[0] == winningPattern) win = true;
+			else if(interimPattern[1] == winningPattern) win = true;
+			else win = false;
+		}
+
+		//check winning pattern 4: corners
+		if(!win)
+		{
+			win = true;
+			int[] interimPattern = new int[]{pattern[0],pattern[4],pattern[20],pattern[24]};
+			for(int element : interimPattern)
+			{
+				if(element != 1) win = false;
+			}
+		}
+
+		return win;
 	}
 }

@@ -12,6 +12,16 @@ public class BingoController implements Observer{
 	private boolean bingoStatus = false;
 	private int[] bingoPattern;
 
+	public static void showPattern(String message, int[] pattern)
+	{
+		System.out.println(message);
+		for(int i = 0; i < 25; ++i)
+		{
+			System.out.print(pattern[i] + " ");
+		}
+		System.out.println(" ");
+	}
+
 	public BingoController(Bingo model, BingoView view)
 	{
 		this.model = model;
@@ -56,6 +66,16 @@ public class BingoController implements Observer{
 		return pattern;
 	}
 
+	public boolean checkPattern(int[] pattern, String[] sequence)
+	{
+		int[] realSequence = new int[sequence.length];
+		for(int i = 0; i < sequence.length; ++i)
+		{
+			realSequence[i] = Integer.parseInt(sequence[i].substring(1));
+		}
+		return model.checkPattern(pattern, realSequence);
+	}
+
 	//When user clicked Bingo, get the pattern
 	@Override
 	public void update(Observable o, Object arg)
@@ -63,15 +83,5 @@ public class BingoController implements Observer{
 		bingoPattern = (int[]) arg;
 		//showPattern("Controller update", bingoPattern);
 		bingoStatus = true;
-	}
-
-	public static void showPattern(String message, int[] pattern)
-	{
-		System.out.println(message);
-		for(int i = 0; i < 25; ++i)
-		{
-			System.out.print(pattern[i] + " ");
-		}
-		System.out.println(" ");
 	}
 }

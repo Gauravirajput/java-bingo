@@ -73,9 +73,7 @@ public class BingoClient{
                         int[] pattern = controller.getPattern();
                         try
                         {
-                            showPattern("banana: " , pattern);
                             toServer.println(Arrays.toString(pattern));
-                            //System.out.println("Out to server");
                         }
                         catch(Exception e)
                         {
@@ -95,11 +93,9 @@ public class BingoClient{
         String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
         int[] convertedArray = new int[items.length];
 
-        //System.out.println("from convertPattern");
         for (int i = 0; i < items.length; i++) {
             try {
                 convertedArray[i] = Integer.parseInt(items[i]);
-                System.out.println(convertedArray[i] + " ");
             } catch (NumberFormatException nfe) {};
         }
 
@@ -175,7 +171,6 @@ public class BingoClient{
                 String cardSetInput = in.readLine();
                 //System.out.println(cardSetInput);
                 cardSets[i] = client.convertCards(cardSetInput);
-                client.showPattern("from client:", cardSets[i]);
             }
             catch(Exception e)
             {
