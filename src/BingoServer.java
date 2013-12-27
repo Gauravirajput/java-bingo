@@ -74,16 +74,19 @@ public class BingoServer{
         cards = Integer.parseInt(in.readLine());
         System.out.println("Cards from client: " + cards);
 
+        int[][] cardSet = new int[cards][];
         //initialize array with n cards and 25 numbers for each card
         for(int i = 0; i < cards; ++i)
         {
             //generate one set of randomized numbers of each card
-            int[] cardSet = model.generateCardSet();
-            out.println(Arrays.toString(cardSet));
+            int[] set = model.generateCardSet();
+            cardSet[i] = set;
+            out.println(Arrays.toString(set));
         }
 
         //get a list of randomized numbers to be called
         String[] sequence = controller.getCallSequence();
+        System.out.println(Arrays.toString(sequence));
         out.println(Arrays.toString(sequence));
         out.flush();
 
@@ -94,8 +97,11 @@ public class BingoServer{
             {
                 //String patternInput = in.readLine();
                 int[] pattern = convertPattern(patternInput);
+                int cardNumber = Integer.parseInt(in.readLine());
+                String sequenceInput = in.readLine();
+                String[] interimSequence = sequenceInput.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
                 //showPattern("From Server", pattern);
-                boolean win = controller.checkPattern(pattern, sequence);
+                boolean win = controller.checkWinningCondition(cardNumber, pattern, interimSequence, cardSet);
                 System.out.println("Win?: " + win);
             }  
         }

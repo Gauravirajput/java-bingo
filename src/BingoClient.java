@@ -3,6 +3,7 @@ import java.io.*;
 import java.net.*;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 
 public class BingoClient{
 
@@ -17,6 +18,7 @@ public class BingoClient{
     public static int cards;
     public static int[][] cardSets;
     public static String sequenceInput;
+    public static ArrayList<String> interimSequence;
 
     public void handleGUI()
     {
@@ -26,6 +28,7 @@ public class BingoClient{
             {
                 //split here: handle GUI/sequence
                 //cards: number of cards selected by user
+                interimSequence = new ArrayList<String>();
 
                 try{
                     String[] sequence = convertPattern(sequenceInput);
@@ -37,6 +40,7 @@ public class BingoClient{
                         {
                             Thread.sleep(5000);
                             controller.updateDisplayNumber(sequence[i]);
+                            interimSequence.add(sequence[i]);
                         }
                         catch(Exception e)
                         {
@@ -70,10 +74,17 @@ public class BingoClient{
                     if(win)
                     {
                         //System.out.println("win");
+                        int cardNumber = controller.getCardNumber();
                         int[] pattern = controller.getPattern();
                         try
                         {
                             toServer.println(Arrays.toString(pattern));
+                            toServer.println(cardNumber);
+
+                            String[] is = new String[interimSequence.size()];
+                            is = interimSequence.toArray(is);
+
+                            toServer.println(Arrays.toString(is));
                         }
                         catch(Exception e)
                         {

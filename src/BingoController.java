@@ -11,6 +11,7 @@ public class BingoController implements Observer{
 	private BingoView view;
 	private boolean bingoStatus = false;
 	private int[] bingoPattern;
+	private int cardNumber = 0;
 
 	public static void showPattern(String message, int[] pattern)
 	{
@@ -66,22 +67,52 @@ public class BingoController implements Observer{
 		return pattern;
 	}
 
-	public boolean checkPattern(int[] pattern, String[] sequence)
+	public int getCardNumber()
 	{
+		return cardNumber;
+	}
+
+	public boolean checkWinningCondition(int cardNumber, int[] pattern, String[] sequence, int[][] cardSet)
+	{
+		boolean validPattern = false;
+		boolean win = false;
+
 		int[] realSequence = new int[sequence.length];
 		for(int i = 0; i < sequence.length; ++i)
 		{
 			realSequence[i] = Integer.parseInt(sequence[i].substring(1));
 		}
-		return model.checkPattern(pattern, realSequence);
+
+		validPattern = model.checkPattern(pattern);
+		if(validPattern)
+		{
+			ArrayList<Integer> subPattern = new ArrayList<Integer>();
+			for(int i = 0; i < pattern.length; ++i)
+			{
+				if(pattern[i] == 1)
+				{
+					subPattern.add(cardSet[cardNumber][i]);
+				}
+			}
+			return model.checkNumber(subPattern, realSequence);
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	//When user clicked Bingo, get the pattern
 	@Override
 	public void update(Observable o, Object arg)
 	{
-		bingoPattern = (int[]) arg;
-		//showPattern("Controller update", bingoPattern);
-		bingoStatus = true;
+		if(arg instanceof BingoCard)
+		{
+			BingoCard card = (BingoCard)arg;
+			bingoPattern = card.getPattern();
+			cardNumber = card.getCardNumber();
+			//showPattern("Controller update", bingoPattern);
+			bingoStatus = true;
+		}
 	}
 }

@@ -4,7 +4,9 @@ import java.util.*;
 // Model class
 public class Bingo
 {
-	public int[] winningPattern = new int[]{1};
+	public int cardNumber = 0;
+	public int[] cardPattern;
+
 	public int[][] getFullRandomizedSet()
   	{
   		// storing the complete list of randomized card set
@@ -107,7 +109,7 @@ public class Bingo
 		return cardSet;
 	}
 
-	public boolean checkPattern(int[] pattern, int[] sequence)
+	public boolean checkPattern(int[] pattern)
 	{
 		boolean win = false;
 		//check winning pattern 1: horizontal lines
@@ -170,7 +172,7 @@ public class Bingo
 
 				if(count == 5){
 					win = true;
-				break;
+					break;
 				}
 			}
 		}
@@ -187,5 +189,38 @@ public class Bingo
 		}
 
 		return win;
+	}
+
+	public boolean checkNumber(ArrayList<Integer> subPattern, int[] sequence)
+	{
+		int count = 0;
+		System.out.println("checknumber:" + Arrays.toString(sequence));
+		for(int i = 0; i < subPattern.size(); ++i)
+		{
+			for(int j = 0; j < sequence.length; ++j)
+			{
+				System.out.printf("Comparing %d and %d ", subPattern.get(i), sequence[j]);
+				if(subPattern.get(i) == sequence[j])
+				{
+					System.out.println(": Suceed\n");
+					count++;
+				}
+				else
+				{
+					System.out.println(": Failure\n");
+				}
+			}
+		}
+
+		if(count >= subPattern.size())
+		{
+			System.out.printf("Win with Count: %d \n", count);
+			return true;
+		}
+		else
+		{
+			System.out.printf("Not Win with Count: %d \n", count);
+			return false;
+		}
 	}
 }

@@ -74,15 +74,16 @@ public class BingoView extends Observable implements View{
     {
         public void actionPerformed(ActionEvent e)
         {
-             JButton button = (JButton)e.getSource();
+            JButton button = (JButton)e.getSource();
  
-             for(int i = 0; i < numOfCards; ++i)
+            for(int i = 0; i < numOfCards; ++i)
             {
                 if(button == bingoButton[i])
                 {
                     //System.out.println("Hello");
+                    BingoCard bingoCard= new BingoCard(i, bingoPattern[i]);
                     setChanged();
-                    notifyObservers(bingoPattern[i]);
+                    notifyObservers(bingoCard);
                 }
             }
  
