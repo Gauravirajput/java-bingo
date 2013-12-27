@@ -86,10 +86,13 @@ public class BingoClient{
 
                             toServer.println(Arrays.toString(is));
 
-                            String response = in.readLine();
-                            if(response.equals("Win"))
+                            String response;
+                            if((response = in.readLine()) != null)
                             {
-                                controller.annouceWinner();
+                                if(response.equals("Win"))
+                                {
+                                    controller.annouceWinner();
+                                }
                             }
                         }
                         catch(Exception e)
