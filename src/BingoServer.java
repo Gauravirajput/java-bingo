@@ -102,7 +102,11 @@ public class BingoServer{
                 String[] interimSequence = sequenceInput.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
                 //showPattern("From Server", pattern);
                 boolean win = controller.checkWinningCondition(cardNumber, pattern, interimSequence, cardSet);
-                System.out.println("Win?: " + win);
+                if(win)
+                {
+                    out.println("Win");
+                    break;
+                }
             }  
         }
 	}

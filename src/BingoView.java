@@ -238,4 +238,16 @@ public class BingoView extends Observable implements View{
         frame.setVisible(true);
     }
 
+    public void annouceWinner()
+    {
+        JPanel winPanel = new JPanel();
+        JLabel win = new JLabel("You've win the game!");
+        winPanel.add(win);
+
+        frame.getContentPane().remove(mainPanel);
+        frame.getContentPane().add(winPanel);
+        frame.invalidate();
+        frame.validate();
+    }
+
 }

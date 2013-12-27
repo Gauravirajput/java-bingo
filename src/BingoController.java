@@ -84,22 +84,30 @@ public class BingoController implements Observer{
 		}
 
 		validPattern = model.checkPattern(pattern);
-		if(validPattern)
-		{
-			ArrayList<Integer> subPattern = new ArrayList<Integer>();
-			for(int i = 0; i < pattern.length; ++i)
-			{
-				if(pattern[i] == 1)
-				{
-					subPattern.add(cardSet[cardNumber][i]);
-				}
-			}
-			return model.checkNumber(subPattern, realSequence);
-		}
-		else
-		{
-			return false;
-		}
+		//disabled for the moment for fast win
+		// if(validPattern)
+		// {
+		// 	ArrayList<Integer> subPattern = new ArrayList<Integer>();
+		// 	for(int i = 0; i < pattern.length; ++i)
+		// 	{
+		// 		if(pattern[i] == 1)
+		// 		{
+		// 			subPattern.add(cardSet[cardNumber][i]);
+		// 		}
+		// 	}
+		// 	return model.checkNumber(subPattern, realSequence);
+		// }
+		// else
+		// {
+		// 	return false;
+		// }
+
+		return validPattern;
+	}
+
+	public void annouceWinner()
+	{
+		view.annouceWinner();
 	}
 
 	//When user clicked Bingo, get the pattern

@@ -85,6 +85,12 @@ public class BingoClient{
                             is = interimSequence.toArray(is);
 
                             toServer.println(Arrays.toString(is));
+
+                            String response = in.readLine();
+                            if(response.equals("Win"))
+                            {
+                                controller.annouceWinner();
+                            }
                         }
                         catch(Exception e)
                         {
