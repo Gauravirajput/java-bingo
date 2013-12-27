@@ -157,9 +157,22 @@ public class Bingo
 												 {pattern[4],pattern[8],pattern[12],pattern[16],pattern[20]}
 												};
 
-			if(interimPattern[0] == winningPattern) win = true;
-			else if(interimPattern[1] == winningPattern) win = true;
-			else win = false;
+			for(int i = 0; i < 2; ++i)
+			{
+				int count = 0;
+				for(int j = 0; j < 5; ++j)
+				{
+					if(interimPattern[i][j] == 1)
+					{
+						count++;
+					}
+				}
+
+				if(count == 5){
+					win = true;
+				break;
+				}
+			}
 		}
 
 		//check winning pattern 4: corners
