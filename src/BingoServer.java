@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class BingoServer{
 
     private static ServerSocket serverSocket = null;
-    private static Socket clientSocket = null;
+    private static Socket clientSocket[] = null;
 
     private static final int maxClientCount = 2;
     private static final clientThread[] threads = new clientThread[maxClientCount];
@@ -31,29 +31,24 @@ public class BingoServer{
         }
 
         //handles client connection
-        while(true){
+        int i = 0;
+        clientSocket = new Socket[maxClientCount];
+        while(i < maxClientCount){
             try{
-                clientSocket = serverSocket.accept();
-                int i = 0; 
-                for(i = 0; i < maxClientCount; ++i){
-                    if(threads[i] == null){
-                        threads[i] = new clientThread(clientSocket, threads);
-                        threads[i].start();
-                        break;
-                    }
-                }
+                clientSocket[i] = serverSocket.accept();
+                i++;
 
-                if(i == maxClientCount){
-                    PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                    out.println("full");
-                    out.close();
-                    clientSocket.close();
-                }
             }catch(Exception e){
                 e.printStackTrace();
             }
         }
         
+        for(int j = 0; j < maxClientCount; ++j){
+            if(threads[j] == null){
+                threads[j] = new clientThread(clientSocket[j], threads);
+                threads[j].start();
+            }
+        }
  
 	}
 }
