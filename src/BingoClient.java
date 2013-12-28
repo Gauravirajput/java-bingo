@@ -151,6 +151,9 @@ public class BingoClient{
 
         try {
             clientSocket = new Socket(hostName, portNumber);
+            toServer = new PrintWriter(clientSocket.getOutputStream(), true);
+            in = new BufferedReader(
+                new InputStreamReader(clientSocket.getInputStream()));
         }
         catch (UnknownHostException e) {
             System.err.println("Don't know about host " + hostName);
@@ -168,40 +171,38 @@ public class BingoClient{
 
         BingoClient client = new BingoClient();
 
-        toServer = new PrintWriter(clientSocket.getOutputStream(), true);
-        in = new BufferedReader(
-                new InputStreamReader(clientSocket.getInputStream()));
-
-        String fromServer;
-        fromServer = in.readLine();
-        System.out.println(fromServer);
-
-        cards = controller.displayMainPage();
-        toServer.println(cards);
-        toServer.flush();
-
-
-        cardSets = new int[cards][];
-        for(int i = 0; i < cards; ++i)
-        {
-            try
-            {
-                String cardSetInput = in.readLine();
-                //System.out.println(cardSetInput);
-                cardSets[i] = client.convertCards(cardSetInput);
-            }
-            catch(Exception e)
-            {
-                e.printStackTrace();
-            }
+        String fromServer = in.readLine();
+        if(fromServer.equals("full")){
+            System.out.println("Full already.");
         }
+        else{
+            System.out.println(fromServer);
 
-        //input sequence line
-        sequenceInput = in.readLine();
+            cards = controller.displayMainPage();
+            toServer.println(cards);
+            toServer.flush();
 
-        //handleGUI and handleBIngo here
-        client.handleBingo();
-        client.handleGUI();
-        
+            cardSets = new int[cards][];
+            for(int i = 0; i < cards; ++i)
+            {
+                try
+                {
+                    String cardSetInput = in.readLine();
+                    //System.out.println(cardSetInput);
+                    cardSets[i] = client.convertCards(cardSetInput);
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            //input sequence line
+            sequenceInput = in.readLine();
+
+            //handleGUI and handleBIngo here
+            client.handleBingo();
+            client.handleGUI();
+        }  
 	}
 }
