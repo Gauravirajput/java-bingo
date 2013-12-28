@@ -21,12 +21,14 @@ public class BingoView extends Observable implements View{
     private int[][] bingoPattern;
     private int[][] bingoCards;
     private JFrame frame;
-    private JButton[] bingoButton = new JButton[3];
+    private JButton[] bingoButton;
     private JButton[][] numberButtons;
     private JLabel[][] completeList = new JLabel[15][5];
     private JLabel numberDisplay = new JLabel("", SwingConstants.CENTER);
     private GridLayout mainPage;
     private JPanel mainPanel = new JPanel();
+    private JSplitPane splitPane;
+    private Color[] colours;
 
 	public BingoView()
 	{
@@ -35,6 +37,13 @@ public class BingoView extends Observable implements View{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         numberDisplay.setFont(new Font("Serif", Font.PLAIN, 60));
+
+        Color b = new Color(255, 168, 158);
+        Color i = new Color(255, 250, 242);
+        Color n = new Color(255, 243, 186);
+        Color g = new Color(181, 247, 136);
+        Color o = new Color(184, 230, 255);
+        colours = new Color[]{b, i, n, g, o};
 	}
 
     //Event Listeners
@@ -113,6 +122,8 @@ public class BingoView extends Observable implements View{
         {
             @Override
             protected Void doInBackground() throws Exception{
+                Color c = Color.black;
+
                 numberDisplay.setText(number);
                 numberDisplay.setForeground(Color.red);
 
@@ -145,7 +156,7 @@ public class BingoView extends Observable implements View{
 
                 int row = n - (column * 15) - 1;
 
-                completeList[row][column].setBackground(Color.green);
+                completeList[row][column].setBackground(colours[column]);
                 return null;
             }
         };
@@ -155,25 +166,73 @@ public class BingoView extends Observable implements View{
 
     public void displayCards(int numberOfCards, int[][] cards)
     {
-        mainPage = new GridLayout(numberOfCards + 2, 0);
-        mainPanel.setLayout(mainPage);
-        mainPanel.add(numberDisplay);
-
         //initialize the global variables
         numOfCards = numberOfCards;
         bingoCards = cards;
         bingoPattern = new int[numberOfCards][25];
-        
-        String[] alphabet = {"B", "I", "N", "G", "O"};
+        bingoButton = new JButton[numberOfCards];
 
+        JPanel numberPanel = new JPanel(new BorderLayout());
+        numberPanel.setPreferredSize(new Dimension(300, 100));
+        numberPanel.add(numberDisplay, BorderLayout.CENTER);
+
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        mainPanel.add(numberPanel, c);
+        
+        String[] alphabet = {"B", "I", "N", "G", "O"}; 
+
+        //initialize the main bingo board that labels down the sequence history
+        GridLayout completeLayout = new GridLayout(16,5);
+        JPanel completeListPanel = new JPanel();
+        completeListPanel.setLayout(completeLayout);
+        completeListPanel.setPreferredSize(new Dimension(150,400));
+        for(int j = 0; j < 5; ++j)
+        {
+            JLabel bingoLabel = new JLabel(alphabet[j], SwingConstants.CENTER);
+            bingoLabel.setOpaque(true);
+            bingoLabel.setBackground(colours[j]);
+            completeListPanel.add(bingoLabel);
+            for(int i = 0; i < 15; ++i)
+            {
+                JLabel l = new JLabel(Integer.toString((j*15) + i + 1), SwingConstants.CENTER);
+                //j,i because its vertical instead of horizontal
+                completeList[i][j] = l;
+                completeList[i][j].setOpaque(true);
+            }
+        }
+
+        //then add to the panel
+        for(int i = 0; i < 15; ++i)
+        {
+            for(int j = 0; j < 5; ++j)
+            {
+                completeListPanel.add(completeList[i][j]);
+
+            }
+        }
+
+        //set each bingo card with BINGO buttons
         for(int i = 0; i < numberOfCards; ++i)
         {
             JButton b = new JButton("BINGO!");
             bingoButton[i] = b;
             bingoButton[i].addActionListener(new BingoButtonListener());
         }
+
+        int row, col;
+        switch(numberOfCards){
+            case 1: row = 1; col = 1; break;
+            case 2: row = 1; col = 2; break;
+            case 3: row = 2; col = 2; break;
+            case 4: row = 2; col = 2; break;
+            default: row = 0; col = 0;
+        }
+
+        JPanel mainBingoPanel = new JPanel(new GridLayout(row, col));
         
-        //initialize each bingo cards
         numberButtons = new JButton[numberOfCards][25];
         for(int j = 0; j < numberOfCards; ++j)
         {
@@ -181,7 +240,7 @@ public class BingoView extends Observable implements View{
             JPanel cardPanel = new JPanel();
             cardPanel.setLayout(cardLayout);
 
-            JPanel bingoPanel = new JPanel();
+            JPanel bingoPanel = new JPanel(new BorderLayout());
             bingoPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 
             // Initialize grid layout and several buttons for number of cards
@@ -199,39 +258,19 @@ public class BingoView extends Observable implements View{
             }
             
             bingoPanel.add(cardPanel, BorderLayout.NORTH);
-            bingoPanel.add(bingoButton[j], BorderLayout.EAST);
-            mainPanel.add(bingoPanel);
+            bingoPanel.add(bingoButton[j], BorderLayout.SOUTH);
+            mainBingoPanel.add(bingoPanel);
         }
 
-        //initialize the main bingo board
-        GridLayout completeLayout = new GridLayout(16,5);
-        JPanel completeListPanel = new JPanel();
-        completeListPanel.setLayout(completeLayout);
-        for(int j = 0; j < 5; ++j)
-        {
-            JLabel bingoLabel = new JLabel(alphabet[j], SwingConstants.CENTER);
-            completeListPanel.add(bingoLabel);
-            for(int i = 0; i < 15; ++i)
-            {
-                JLabel l = new JLabel(Integer.toString((j*15) + i + 1), SwingConstants.CENTER);
-                //j,i because its vertical instead of horizontal
-                completeList[i][j] = l;
-                completeList[i][j].setOpaque(true);
-            }
-        }
+        c.gridx = 0;
+        c.gridy = 1;
+        mainPanel.add(mainBingoPanel, c);
 
-        //then add to the panel
-        for(int i = 0; i < 15; ++i)
-        {
-            for(int j = 0; j < 5; ++j)
-            {
-                completeListPanel.add(completeList[i][j]);
-            }
-        }
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, completeListPanel, mainPanel);
+        splitPane.setDividerLocation(0.4);
 
-        mainPanel.add(completeListPanel);
-
-        frame.getContentPane().add(mainPanel);
+        //frame.getContentPane().add(mainPanel);
+        frame.getContentPane().add(splitPane);
 
         //Display the window.
         frame.pack();
@@ -244,7 +283,7 @@ public class BingoView extends Observable implements View{
         JLabel win = new JLabel("You've win the game!");
         winPanel.add(win);
 
-        frame.getContentPane().remove(mainPanel);
+        frame.getContentPane().remove(splitPane);
         frame.getContentPane().add(winPanel);
         frame.invalidate();
         frame.validate();
