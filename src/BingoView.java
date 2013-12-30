@@ -105,7 +105,7 @@ public class BingoView extends Observable implements View{
 
     class ChatBoxButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
-            System.out.println("fired from action listener");
+            //System.out.println("fired from action listener");
             String message = chatbox.getText();
             setChanged();
             notifyObservers(message);
@@ -311,7 +311,7 @@ public class BingoView extends Observable implements View{
         JLabel win = new JLabel("Player " + winner + " won the game!");
         winPanel.add(win);
 
-        frame.getContentPane().remove(leftSplitPane);
+        frame.getContentPane().remove(rightSplitPane);
         frame.getContentPane().add(winPanel);
         frame.invalidate();
         frame.validate();
@@ -319,7 +319,7 @@ public class BingoView extends Observable implements View{
 
     public void appendChatBox(String message)
     {
-        cb.append(message);
+        cb.append(message + "\n");
     }
 
 }

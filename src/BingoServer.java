@@ -148,38 +148,19 @@ class clientThread extends Thread{
                 String patternInput;
                 if((patternInput = in.readLine()) != null)
                 {
-                    // //String patternInput = in.readLine();
-                    // int[] pattern = convertPattern(patternInput);
-                    // int cardNumber = Integer.parseInt(in.readLine());
-                    // String sequenceInput = in.readLine();
-                    // String[] interimSequence = sequenceInput.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
-                    // //showPattern("From Server", pattern);
-                    // boolean win = controller.checkWinningCondition(cardNumber, pattern, interimSequence, cardSet);
-                    // System.out.println("Win? " + win);
-                    // if(win)
-                    // {
-                    //     out.println("Win");
-                    //     break;
-                    // }
-                    // else
-                    // {
-                    //     out.println("Not Win");
-                    // }
 
                     if(patternInput.equals("W")){
                         //System.out.println("Someone won the game");
                         for(int i = 0; i < threads.length; ++i){
                             threads[i].out.println("W " + playerName);
-                            threads[i].out.flush();
                         }
                     }
                     else if(patternInput.charAt(0) == ':'){
                         String chatMessage = patternInput;
-                        System.out.println("received message from client " + playerName + chatMessage);
+                        //System.out.println("received message from client " + playerName + chatMessage);
                         for(int i = 0; i < threads.length; ++i){
-                            threads[i].out.println("C " + playerName + chatMessage + "\n");
-                            System.out.println("message sent to " + playerName);
-                            threads[i].out.flush();
+                            threads[i].out.println("C " + playerName + chatMessage);
+                            //System.out.println("message sent to " + playerName);
                         }
                     }
                 }  

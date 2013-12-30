@@ -75,7 +75,7 @@ public class BingoController implements Observer{
 
 	public String getChatBoxMessage()
 	{
-		System.out.println("getChatBoxMessage called: " + chatMessage);
+		//System.out.println("getChatBoxMessage called: " + chatMessage);
 		return chatMessage;
 	}
 
@@ -143,7 +143,7 @@ public class BingoController implements Observer{
 		}
 		else if(arg instanceof String)
 		{
-			System.out.println("is a string");
+			//System.out.println("is a string");
 			chatMessage = (String)arg;
 		}
 	}

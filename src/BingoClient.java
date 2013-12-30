@@ -123,17 +123,13 @@ public class BingoClient{
                         String message = in.readLine();
                         if(message != null)
                         {
-                            System.out.println("received message from server " + message);
+                            //System.out.println("received message from server " + message);
                             if(message.charAt(0) == 'W'){
                                 controller.annouceWinner(message.substring(2));
                             }
                             else if(message.charAt(0) == 'C'){
                                 controller.appendChatBox(message.substring(2));
                             }
-                        } 
-                        else
-                        {
-                            System.out.println("it is a null line");
                         } 
                     }catch(IOException e){
                         e.printStackTrace();
@@ -153,10 +149,11 @@ public class BingoClient{
             public void run()
             {
                 while(true){
+                    toServer.flush();
                     try{
                         String chatBoxMessage = controller.getChatBoxMessage();
                         if(chatBoxMessage != null){
-                            System.out.println("got message from controller");
+                            //System.out.println("got message from controller");
                             toServer.println(": " + chatBoxMessage);
                             toServer.flush();
                             controller.resetMessage();
