@@ -31,9 +31,9 @@ public class BingoController implements Observer{
 		view.addObserver(this);
 	}
 
-	public int displayMainPage()
+	public String displayMainPage()
 	{
-		int card = view.displayMainPage();
+		String card = view.displayMainPage();
 		return card;
 	}
 

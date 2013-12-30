@@ -15,7 +15,8 @@ public class BingoClient{
     public static PrintWriter toServer = null;
     public static BufferedReader in = null;
 
-    public static int cards;
+    public static String cards;
+    public static int numofCards;
     public static int[][] cardSets;
     public static String sequenceInput;
     public static ArrayList<String> interimSequence;
@@ -64,7 +65,7 @@ public class BingoClient{
         {
             public void run()
             {
-                controller.displayCards(cards, cardSets);
+                controller.displayCards(numofCards, cardSets);
 
                 while(true)
                 {
@@ -239,14 +240,16 @@ public class BingoClient{
             System.out.println("Full already.");
         }
         else{
+            
             System.out.println(fromServer);
 
             cards = controller.displayMainPage();
+            numofCards = (int)(cards.charAt(0)) - 48;
             toServer.println(cards);
             toServer.flush();
 
-            cardSets = new int[cards][];
-            for(int i = 0; i < cards; ++i)
+            cardSets = new int[numofCards][];
+            for(int i = 0; i < numofCards; ++i)
             {
                 try
                 {

@@ -73,7 +73,7 @@ public class BingoView extends Observable implements View{
                         else
                         {
                             bingoPattern[j][i] = 1;
-                            button.setBackground(Color.RED);
+                            button.setBackground(colours[0]);
                             button.setForeground(Color.WHITE);
                         }
                     }  
@@ -98,8 +98,6 @@ public class BingoView extends Observable implements View{
                     notifyObservers(bingoCard);
                 }
             }
- 
-            button.setBackground(Color.GRAY);
         }
     }
 
@@ -112,20 +110,23 @@ public class BingoView extends Observable implements View{
         }
     }
 
-	public int displayMainPage()
+	public String displayMainPage()
 	{
-        Object[] cards = {"1", "2", "3", "4"};
+        String[] cards = {"1", "2", "3", "4"};
 
-        String numberOfCard = (String)JOptionPane.showInputDialog(
-                    frame,
-                    "Select number of cards",
-                    "select cards",
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    cards,
-                    "ham");
+        final JTextField name = new JTextField();  
+        final JComboBox<String> numberOfCards = new JComboBox<String>(cards);  
+        final JComponent[] inputs = new JComponent[] {  
+                 new JLabel("Player name:"),  
+                 name,  
+                 new JLabel("Select number of cards:"),  
+                 numberOfCards
+       };  
+       int result = JOptionPane.showConfirmDialog(null, inputs, "Change Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
 
-        return Integer.parseInt(numberOfCard);
+        System.out.println("Selected item: " +numberOfCards.getSelectedItem());
+       String input = numberOfCards.getSelectedItem() + name.getText();
+        return input;
 	}
 
     public void updateDisplayNumber(final String number)
@@ -137,7 +138,7 @@ public class BingoView extends Observable implements View{
                 Color c = Color.black;
 
                 numberDisplay.setText(number);
-                numberDisplay.setForeground(Color.red);
+                numberDisplay.setForeground(new Color(63,101,125));
 
                 int n = Integer.parseInt(number.substring(1));
                 int column = -1;

@@ -51,11 +51,10 @@ public class BingoServer{
         controller = new BingoController(model, view);
         
         String[] sequence = controller.getCallSequence();
-        String[] players = new String[]{"One", "Two"};
         
         for(int j = 0; j < maxClientCount; ++j){
             if(threads[j] == null){
-                threads[j] = new clientThread(clientSocket[j], threads, sequence, players[j]);
+                threads[j] = new clientThread(clientSocket[j], threads, sequence);
                 threads[j].start();
             }
         }
@@ -72,7 +71,7 @@ class clientThread extends Thread{
     private final clientThread[] threads;
     private String playerName = null;
 
-    public clientThread(Socket clientSocket, clientThread[] threads, String[] sequence, String playerName){
+    public clientThread(Socket clientSocket, clientThread[] threads, String[] sequence){
         this.clientSocket = clientSocket;
         this.threads = threads;
         this.sequence = sequence;
@@ -117,19 +116,22 @@ class clientThread extends Thread{
             new InputStreamReader(clientSocket.getInputStream()));
 
             String inputLine, outputLine;
-            int cards;
+            String cards;
              
             // Initiate conversation with client
             outputLine = "Welcome to Bingo!";
             out.println(outputLine);
 
             // Get input from client
-            cards = Integer.parseInt(in.readLine());
-            System.out.println("Cards from client: " + cards);
+            cards = in.readLine();
+            int numofCards = (int)(cards.charAt(0)) - 48;
+            String playerName = cards.substring(1);
+            this.playerName = playerName;
+            System.out.println("Cards from client: " + numofCards);
 
-            int[][] cardSet = new int[cards][];
+            int[][] cardSet = new int[numofCards][];
             //initialize array with n cards and 25 numbers for each card
-            for(int i = 0; i < cards; ++i)
+            for(int i = 0; i < numofCards; ++i)
             {
                 //generate one set of randomized numbers of each card
                 int[] set = model.generateCardSet();
