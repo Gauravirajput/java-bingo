@@ -12,6 +12,7 @@ public class BingoController implements Observer{
 	private boolean bingoStatus = false;
 	private int[] bingoPattern;
 	private int cardNumber = 0;
+	private String chatMessage = null;
 
 	public static void showPattern(String message, int[] pattern)
 	{
@@ -72,6 +73,22 @@ public class BingoController implements Observer{
 		return cardNumber;
 	}
 
+	public String getChatBoxMessage()
+	{
+		System.out.println("getChatBoxMessage called: " + chatMessage);
+		return chatMessage;
+	}
+
+	public void resetMessage()
+	{
+		chatMessage = null;
+	}
+
+	public void appendChatBox(String message)
+	{
+		view.appendChatBox(message);
+	}
+
 	public boolean checkWinningCondition(int cardNumber, int[] pattern, String[] sequence, int[][] cardSet)
 	{
 		boolean validPattern = false;
@@ -105,15 +122,17 @@ public class BingoController implements Observer{
 		//return validPattern;
 	}
 
-	public void annouceWinner()
+	public void annouceWinner(String winner)
 	{
-		view.annouceWinner();
+		view.annouceWinner(winner);
 	}
 
 	//When user clicked Bingo, get the pattern
 	@Override
 	public void update(Observable o, Object arg)
 	{
+		System.out.println("received an object from observer");
+
 		if(arg instanceof BingoCard)
 		{
 			BingoCard card = (BingoCard)arg;
@@ -121,6 +140,11 @@ public class BingoController implements Observer{
 			cardNumber = card.getCardNumber();
 			//showPattern("Controller update", bingoPattern);
 			bingoStatus = true;
+		}
+		else if(arg instanceof String)
+		{
+			System.out.println("is a string");
+			chatMessage = (String)arg;
 		}
 	}
 }

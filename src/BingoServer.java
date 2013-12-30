@@ -4,7 +4,9 @@ import java.net.*;
 import java.util.Arrays;
 
 public class BingoServer{
-
+    private static Bingo model;
+    private static BingoController controller;
+    private static BingoView view;
     private static ServerSocket serverSocket = null;
     private static Socket clientSocket[] = null;
 
@@ -23,6 +25,7 @@ public class BingoServer{
  
         try {
             serverSocket = new ServerSocket(portNumber);
+            System.out.println("Server Started. Waiting for clients...");
         }
         catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "
@@ -42,10 +45,17 @@ public class BingoServer{
                 e.printStackTrace();
             }
         }
+
+        model = new Bingo();
+        view = new BingoView();
+        controller = new BingoController(model, view);
+        
+        String[] sequence = controller.getCallSequence();
+        String[] players = new String[]{"One", "Two"};
         
         for(int j = 0; j < maxClientCount; ++j){
             if(threads[j] == null){
-                threads[j] = new clientThread(clientSocket[j], threads);
+                threads[j] = new clientThread(clientSocket[j], threads, sequence, players[j]);
                 threads[j].start();
             }
         }
@@ -55,14 +65,18 @@ public class BingoServer{
 
 class clientThread extends Thread{
 
+    private String[] sequence;
     private PrintWriter out = null;
     private BufferedReader in = null;
     private Socket clientSocket = null;
     private final clientThread[] threads;
+    private String playerName = null;
 
-    public clientThread(Socket clientSocket, clientThread[] threads){
+    public clientThread(Socket clientSocket, clientThread[] threads, String[] sequence, String playerName){
         this.clientSocket = clientSocket;
         this.threads = threads;
+        this.sequence = sequence;
+        this.playerName = playerName;
     }
 
     public static int[] convertPattern(String array)
@@ -124,7 +138,7 @@ class clientThread extends Thread{
             }
 
             //get a list of randomized numbers to be called
-            String[] sequence = controller.getCallSequence();
+            
             //System.out.println(Arrays.toString(sequence));
             out.println(Arrays.toString(sequence));
             out.flush();
@@ -134,22 +148,39 @@ class clientThread extends Thread{
                 String patternInput;
                 if((patternInput = in.readLine()) != null)
                 {
-                    //String patternInput = in.readLine();
-                    int[] pattern = convertPattern(patternInput);
-                    int cardNumber = Integer.parseInt(in.readLine());
-                    String sequenceInput = in.readLine();
-                    String[] interimSequence = sequenceInput.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
-                    //showPattern("From Server", pattern);
-                    boolean win = controller.checkWinningCondition(cardNumber, pattern, interimSequence, cardSet);
-                    System.out.println("Win? " + win);
-                    if(win)
-                    {
-                        out.println("Win");
-                        break;
+                    // //String patternInput = in.readLine();
+                    // int[] pattern = convertPattern(patternInput);
+                    // int cardNumber = Integer.parseInt(in.readLine());
+                    // String sequenceInput = in.readLine();
+                    // String[] interimSequence = sequenceInput.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
+                    // //showPattern("From Server", pattern);
+                    // boolean win = controller.checkWinningCondition(cardNumber, pattern, interimSequence, cardSet);
+                    // System.out.println("Win? " + win);
+                    // if(win)
+                    // {
+                    //     out.println("Win");
+                    //     break;
+                    // }
+                    // else
+                    // {
+                    //     out.println("Not Win");
+                    // }
+
+                    if(patternInput.equals("W")){
+                        //System.out.println("Someone won the game");
+                        for(int i = 0; i < threads.length; ++i){
+                            threads[i].out.println("W " + playerName);
+                            threads[i].out.flush();
+                        }
                     }
-                    else
-                    {
-                        out.println("Not Win");
+                    else if(patternInput.charAt(0) == ':'){
+                        String chatMessage = patternInput;
+                        System.out.println("received message from client " + playerName + chatMessage);
+                        for(int i = 0; i < threads.length; ++i){
+                            threads[i].out.println("C " + playerName + chatMessage + "\n");
+                            System.out.println("message sent to " + playerName);
+                            threads[i].out.flush();
+                        }
                     }
                 }  
             }

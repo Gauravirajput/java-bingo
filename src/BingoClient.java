@@ -58,7 +58,7 @@ public class BingoClient{
         t.start();
     }
 
-    public void handleBingo()
+    public void handleCards()
     {
         Thread t = new Thread(new Runnable()
         {
@@ -78,19 +78,23 @@ public class BingoClient{
                         int[] pattern = controller.getPattern();
                         try
                         {
-                            toServer.println(Arrays.toString(pattern));
-                            toServer.println(cardNumber);
+                            // toServer.println(Arrays.toString(pattern));
+                            // toServer.println(cardNumber);
 
-                            String[] is = new String[interimSequence.size()];
-                            is = interimSequence.toArray(is);
+                             String[] is = new String[interimSequence.size()];
+                             is = interimSequence.toArray(is);
 
-                            toServer.println(Arrays.toString(is));
-                            System.out.println("sent");
+                            // toServer.println(Arrays.toString(is));
+                            // System.out.println("sent");
 
-                            String response = in.readLine();
-                            if(response.equals("Win"))
+                            // String response = in.readLine();
+
+                            boolean w = controller.checkWinningCondition(cardNumber, pattern, is, cardSets);
+                            //if(response.equals("Win"))
+                            if(w)
                             {
-                                controller.annouceWinner();
+                                //controller.annouceWinner();
+                                toServer.println("W");
                             }
                         }
                         catch(Exception e)
@@ -98,6 +102,8 @@ public class BingoClient{
                             e.printStackTrace();
                         } 
                     }
+
+
                 }
             }
         });
@@ -105,6 +111,66 @@ public class BingoClient{
         t.setName("BINGO");
         t.start();
     }
+
+    public void handleBingo()
+    {
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while(true){
+                    try{
+                        String message = in.readLine();
+                        if(message != null)
+                        {
+                            System.out.println("received message from server " + message);
+                            if(message.charAt(0) == 'W'){
+                                controller.annouceWinner(message.substring(2));
+                            }
+                            else if(message.charAt(0) == 'C'){
+                                controller.appendChatBox(message.substring(2));
+                            }
+                        } 
+                        else
+                        {
+                            System.out.println("it is a null line");
+                        } 
+                    }catch(IOException e){
+                        e.printStackTrace();
+                    } 
+                }
+            }
+        });
+
+        t.setName("Bingo");
+        t.start();
+    }
+
+    public void handleChatMessages()
+    {
+        Thread t = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                while(true){
+                    try{
+                        String chatBoxMessage = controller.getChatBoxMessage();
+                        if(chatBoxMessage != null){
+                            System.out.println("got message from controller");
+                            toServer.println(": " + chatBoxMessage);
+                            toServer.flush();
+                            controller.resetMessage();
+                        }  
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    } 
+                }
+            }
+        });
+
+        t.setName("Messages");
+        t.start();
+    }       
 
     public int[] convertCards(String array)
     {
@@ -200,9 +266,11 @@ public class BingoClient{
             //input sequence line
             sequenceInput = in.readLine();
 
-            //handleGUI and handleBIngo here
-            client.handleBingo();
+            //handleGUI and handleCards here
+            client.handleCards();
             client.handleGUI();
+            client.handleBingo();
+            client.handleChatMessages();
         }  
 	}
 }

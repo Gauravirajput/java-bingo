@@ -27,8 +27,11 @@ public class BingoView extends Observable implements View{
     private JLabel numberDisplay = new JLabel("", SwingConstants.CENTER);
     private GridLayout mainPage;
     private JPanel mainPanel = new JPanel();
-    private JSplitPane splitPane;
+    private JSplitPane leftSplitPane;
+    private JSplitPane rightSplitPane;
     private Color[] colours;
+    private JTextField chatbox;
+    private JTextArea cb;
 
 	public BingoView()
 	{
@@ -97,6 +100,15 @@ public class BingoView extends Observable implements View{
             }
  
             button.setBackground(Color.GRAY);
+        }
+    }
+
+    class ChatBoxButtonListener implements ActionListener{
+        public void actionPerformed(ActionEvent e){
+            System.out.println("fired from action listener");
+            String message = chatbox.getText();
+            setChanged();
+            notifyObservers(message);
         }
     }
 
@@ -266,27 +278,48 @@ public class BingoView extends Observable implements View{
         c.gridy = 1;
         mainPanel.add(mainBingoPanel, c);
 
-        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, completeListPanel, mainPanel);
-        splitPane.setDividerLocation(0.4);
+        leftSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, completeListPanel, mainPanel);
+        leftSplitPane.setDividerLocation(0.4);
+
+        //chat panel
+        JPanel chatPanel = new JPanel(new BorderLayout());
+        JPanel chatboxPanel = new JPanel(new FlowLayout());
+        chatbox = new JTextField();
+        chatbox.setColumns(20);
+        JButton sendButton = new JButton("Send");
+        sendButton.addActionListener(new ChatBoxButtonListener());
+        chatboxPanel.add(chatbox);
+        chatboxPanel.add(sendButton);
+        cb = new JTextArea();
+        cb.setEditable(false);
+        chatPanel.add(cb, BorderLayout.NORTH);
+        chatPanel.add(chatboxPanel, BorderLayout.SOUTH);
+        rightSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftSplitPane, chatPanel);
+        rightSplitPane.setDividerLocation(0.8);
 
         //frame.getContentPane().add(mainPanel);
-        frame.getContentPane().add(splitPane);
+        frame.getContentPane().add(rightSplitPane);
 
         //Display the window.
         frame.pack();
         frame.setVisible(true);
     }
 
-    public void annouceWinner()
+    public void annouceWinner(String winner)
     {
         JPanel winPanel = new JPanel();
-        JLabel win = new JLabel("You've win the game!");
+        JLabel win = new JLabel("Player " + winner + " won the game!");
         winPanel.add(win);
 
-        frame.getContentPane().remove(splitPane);
+        frame.getContentPane().remove(leftSplitPane);
         frame.getContentPane().add(winPanel);
         frame.invalidate();
         frame.validate();
+    }
+
+    public void appendChatBox(String message)
+    {
+        cb.append(message);
     }
 
 }
