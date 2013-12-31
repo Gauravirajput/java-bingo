@@ -159,6 +159,7 @@ public class BingoClient{
 
         try{
             clientSocket = new Socket(hostName, portNumber);
+            System.out.println("Waiting for another player..");
             toServer = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));

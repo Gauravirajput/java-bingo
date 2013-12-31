@@ -14,9 +14,8 @@ interface View {
 
 // View class
 public class BingoView extends Observable implements View{
-    //TODO make server listen to client for bingo
-
-    // the array to store values inside the card when bingo is called
+    
+    //initailzation of GUI components
     private int numOfCards;
     private int[][] bingoPattern;
     private int[][] bingoCards;
@@ -40,6 +39,7 @@ public class BingoView extends Observable implements View{
 
         numberDisplay.setFont(new Font("Serif", Font.PLAIN, 60));
 
+        //colors for the number highlights
         Color b = new Color(255, 168, 158);
         Color i = new Color(255, 250, 242);
         Color n = new Color(255, 243, 186);
@@ -48,12 +48,14 @@ public class BingoView extends Observable implements View{
         colours = new Color[]{b, i, n, g, o};
 	}
 
-    //Event Listeners
-   class NumberButtonsListener implements ActionListener{
+    /*Event Listeners*/
+    // listen to each nunber in each bingo card
+    // when user daub the card, change the color of the number
+    // and set the respective pattern array into "1"
+    class NumberButtonsListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             JButton button = (JButton)e.getSource();
             String number = e.getActionCommand();
-            outerloop:
             for(int j = 0; j < numOfCards; ++j){
                 for(int i = 0; i < 25; ++i){
                     String comp = Integer.toString(bingoCards[j][i]);
@@ -74,6 +76,7 @@ public class BingoView extends Observable implements View{
         }
     }
  
+    // Listen to "BINGO" button and send the "pattern" into BingoController for verification
     class BingoButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             JButton button = (JButton)e.getSource();
@@ -89,6 +92,7 @@ public class BingoView extends Observable implements View{
         }
     }
 
+    // Listen and handles chat messages
     class ChatBoxButtonListener implements ActionListener{
         public void actionPerformed(ActionEvent e){
             //System.out.println("fired from action listener");
@@ -99,24 +103,7 @@ public class BingoView extends Observable implements View{
         }
     }
 
-	public String displayMainPage(){
-        String[] cards = {"1", "2", "3", "4"};
-
-        final JTextField name = new JTextField();  
-        final JComboBox<String> numberOfCards = new JComboBox<String>(cards);  
-        final JComponent[] inputs = new JComponent[] {  
-                 new JLabel("Player name:"),  
-                 name,  
-                 new JLabel("Select number of cards:"),  
-                 numberOfCards
-       };  
-       int result = JOptionPane.showConfirmDialog(null, inputs, "Change Password", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
-
-        System.out.println("Selected item: " +numberOfCards.getSelectedItem());
-       String input = numberOfCards.getSelectedItem() + name.getText();
-        return input;
-	}
-
+    // update the big number display
     public void updateDisplayNumber(final String number){
         SwingWorker<Void, Void> worker = new SwingWorker<Void,Void>(){
             @Override
@@ -157,6 +144,33 @@ public class BingoView extends Observable implements View{
         worker.execute();
     }
 
+    /*Ask players for their name and select number of cards to play*/
+    public String displayMainPage(){
+        String[] cards = {"1", "2", "3", "4"};
+
+        final JTextField name = new JTextField();  
+        final JComboBox<String> numberOfCards = new JComboBox<String>(cards);  
+        final JComponent[] inputs = new JComponent[] {  
+                 new JLabel("Player name:"),  
+                 name,  
+                 new JLabel("Select number of cards:"),  
+                 numberOfCards
+        };  
+        int result = JOptionPane.showConfirmDialog(null, inputs, "Hello!", JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE);
+        
+        // compress player name and number of cards 
+        // into single "packet" string and send to the server
+        String input = numberOfCards.getSelectedItem() + name.getText();
+        return input;
+    }
+
+    /*--------------------------------------------------------
+        Main window of the game that shows the bingo cards, 
+        big display number, number calling history and chat box
+        @mainPanel: main panel that shows the big number display(@numberPanel) and bingo cards(@mainBingoPanel)
+        @leftSplitPane: number calling history at the left side and mainpPanel is the right side
+        @rightSplitPane: leftSplitPane at the left side and the chatbox at the right side
+    ----------------------------------------------------------*/
     public void displayCards(int numberOfCards, int[][] cards){
         //initialize the global variables
         numOfCards = numberOfCards;
@@ -277,6 +291,7 @@ public class BingoView extends Observable implements View{
         frame.setVisible(true);
     }
 
+    /* Overrides main game window to tell the users someone has win the game */
     public void annouceWinner(String winner){
         JPanel winPanel = new JPanel();
         JLabel win = new JLabel("Player " + winner + " won the game!");
@@ -288,6 +303,7 @@ public class BingoView extends Observable implements View{
         frame.validate();
     }
 
+    /* Get messages from server and update them */
     public void appendChatBox(String message){
         cb.append(message + "\n");
     }
