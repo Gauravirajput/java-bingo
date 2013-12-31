@@ -33,8 +33,7 @@ public class BingoView extends Observable implements View{
     private JTextField chatbox;
     private JTextArea cb;
 
-	public BingoView()
-	{
+	public BingoView(){
 		//Create and set up the window.
         frame = new JFrame("Bingo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,28 +49,21 @@ public class BingoView extends Observable implements View{
 	}
 
     //Event Listeners
-   class NumberButtonsListener implements ActionListener
-   {
-        public void actionPerformed(ActionEvent e)
-        {
+   class NumberButtonsListener implements ActionListener{
+        public void actionPerformed(ActionEvent e){
             JButton button = (JButton)e.getSource();
             String number = e.getActionCommand();
             outerloop:
-            for(int j = 0; j < numOfCards; ++j)
-            {
-                for(int i = 0; i < 25; ++i)
-                {
+            for(int j = 0; j < numOfCards; ++j){
+                for(int i = 0; i < 25; ++i){
                     String comp = Integer.toString(bingoCards[j][i]);
-                    if(button == numberButtons[j][i])
-                    {
-                        if(bingoPattern[j][i] == 1)
-                        {
+                    if(button == numberButtons[j][i]){
+                        if(bingoPattern[j][i] == 1){
                             bingoPattern[j][i] = 0;
                             button.setBackground(null);
                             button.setForeground(Color.BLACK);
                         }
-                        else
-                        {
+                        else{
                             bingoPattern[j][i] = 1;
                             button.setBackground(colours[0]);
                             button.setForeground(Color.WHITE);
@@ -82,16 +74,12 @@ public class BingoView extends Observable implements View{
         }
     }
  
-    class BingoButtonListener implements ActionListener
-    {
-        public void actionPerformed(ActionEvent e)
-        {
+    class BingoButtonListener implements ActionListener{
+        public void actionPerformed(ActionEvent e){
             JButton button = (JButton)e.getSource();
  
-            for(int i = 0; i < numOfCards; ++i)
-            {
-                if(button == bingoButton[i])
-                {
+            for(int i = 0; i < numOfCards; ++i){
+                if(button == bingoButton[i]){
                     //System.out.println("Hello");
                     BingoCard bingoCard= new BingoCard(i, bingoPattern[i]);
                     setChanged();
@@ -110,8 +98,7 @@ public class BingoView extends Observable implements View{
         }
     }
 
-	public String displayMainPage()
-	{
+	public String displayMainPage(){
         String[] cards = {"1", "2", "3", "4"};
 
         final JTextField name = new JTextField();  
@@ -129,10 +116,8 @@ public class BingoView extends Observable implements View{
         return input;
 	}
 
-    public void updateDisplayNumber(final String number)
-    {
-        SwingWorker<Void, Void> worker = new SwingWorker<Void,Void>()
-        {
+    public void updateDisplayNumber(final String number){
+        SwingWorker<Void, Void> worker = new SwingWorker<Void,Void>(){
             @Override
             protected Void doInBackground() throws Exception{
                 Color c = Color.black;
@@ -142,28 +127,22 @@ public class BingoView extends Observable implements View{
 
                 int n = Integer.parseInt(number.substring(1));
                 int column = -1;
-                if(n >= 1 && n <= 15)
-                {
+                if(n >= 1 && n <= 15){
                     column = 0;
                 }
-                else if(n >= 16 && n <= 30)
-                {
+                else if(n >= 16 && n <= 30){
                     column = 1;
                 }
-                else if(n >= 31 && n <= 45)
-                {
+                else if(n >= 31 && n <= 45){
                     column = 2;
                 }
-                else if(n >= 46 && n <= 60)
-                {
+                else if(n >= 46 && n <= 60){
                     column = 3;
                 }
-                else if(n >= 61 && n <= 75)
-                {
+                else if(n >= 61 && n <= 75){
                     column = 4;
                 }
-                else
-                {
+                else{
                     column = -1;
                 }
 
@@ -177,8 +156,7 @@ public class BingoView extends Observable implements View{
         worker.execute();
     }
 
-    public void displayCards(int numberOfCards, int[][] cards)
-    {
+    public void displayCards(int numberOfCards, int[][] cards){
         //initialize the global variables
         numOfCards = numberOfCards;
         bingoCards = cards;
@@ -202,14 +180,12 @@ public class BingoView extends Observable implements View{
         JPanel completeListPanel = new JPanel();
         completeListPanel.setLayout(completeLayout);
         completeListPanel.setPreferredSize(new Dimension(150,400));
-        for(int j = 0; j < 5; ++j)
-        {
+        for(int j = 0; j < 5; ++j){
             JLabel bingoLabel = new JLabel(alphabet[j], SwingConstants.CENTER);
             bingoLabel.setOpaque(true);
             bingoLabel.setBackground(colours[j]);
             completeListPanel.add(bingoLabel);
-            for(int i = 0; i < 15; ++i)
-            {
+            for(int i = 0; i < 15; ++i){
                 JLabel l = new JLabel(Integer.toString((j*15) + i + 1), SwingConstants.CENTER);
                 //j,i because its vertical instead of horizontal
                 completeList[i][j] = l;
@@ -218,18 +194,15 @@ public class BingoView extends Observable implements View{
         }
 
         //then add to the panel
-        for(int i = 0; i < 15; ++i)
-        {
-            for(int j = 0; j < 5; ++j)
-            {
+        for(int i = 0; i < 15; ++i){
+            for(int j = 0; j < 5; ++j){
                 completeListPanel.add(completeList[i][j]);
 
             }
         }
 
         //set each bingo card with BINGO buttons
-        for(int i = 0; i < numberOfCards; ++i)
-        {
+        for(int i = 0; i < numberOfCards; ++i){
             JButton b = new JButton("BINGO!");
             bingoButton[i] = b;
             bingoButton[i].addActionListener(new BingoButtonListener());
@@ -247,8 +220,7 @@ public class BingoView extends Observable implements View{
         JPanel mainBingoPanel = new JPanel(new GridLayout(row, col));
         
         numberButtons = new JButton[numberOfCards][25];
-        for(int j = 0; j < numberOfCards; ++j)
-        {
+        for(int j = 0; j < numberOfCards; ++j){
             GridLayout cardLayout = new GridLayout(6,5);
             JPanel cardPanel = new JPanel();
             cardPanel.setLayout(cardLayout);
@@ -257,14 +229,12 @@ public class BingoView extends Observable implements View{
             bingoPanel.setBorder(new EmptyBorder(10, 10, 10, 10) );
 
             // Initialize grid layout and several buttons for number of cards
-            for(int i = 0; i < 5; ++i)
-            {
+            for(int i = 0; i < 5; ++i){
                 JLabel l = new JLabel(alphabet[i], SwingConstants.CENTER);
                 cardPanel.add(l);
             }
             
-            for(int i = 0; i < 25; ++i)
-            { 
+            for(int i = 0; i < 25; ++i){ 
                 numberButtons[j][i] = new JButton(Integer.toString(cards[j][i]));
                 numberButtons[j][i].addActionListener(new NumberButtonsListener());
                 cardPanel.add(numberButtons[j][i]);
@@ -306,8 +276,7 @@ public class BingoView extends Observable implements View{
         frame.setVisible(true);
     }
 
-    public void annouceWinner(String winner)
-    {
+    public void annouceWinner(String winner){
         JPanel winPanel = new JPanel();
         JLabel win = new JLabel("Player " + winner + " won the game!");
         winPanel.add(win);
@@ -318,8 +287,7 @@ public class BingoView extends Observable implements View{
         frame.validate();
     }
 
-    public void appendChatBox(String message)
-    {
+    public void appendChatBox(String message){
         cb.append(message + "\n");
     }
 

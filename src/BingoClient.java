@@ -21,35 +21,24 @@ public class BingoClient{
     public static String sequenceInput;
     public static ArrayList<String> interimSequence;
 
-    public void handleGUI()
-    {
-        Thread t = new Thread(new Runnable()
-        {
-            public void run()
-            {
-                //split here: handle GUI/sequence
-                //cards: number of cards selected by user
+    public void handleGUI(){
+        Thread t = new Thread(new Runnable(){
+            public void run(){
                 interimSequence = new ArrayList<String>();
 
                 try{
                     String[] sequence = convertPattern(sequenceInput);
 
-                    for(int i = 0; i < 75; ++i)
-                    {
-                        //System.out.println("Run by " + Thread.currentThread().getName());
-                        try
-                        {
+                    for(int i = 0; i < 75; ++i){
+                        try{
                             Thread.sleep(5000);
                             controller.updateDisplayNumber(sequence[i]);
                             interimSequence.add(sequence[i]);
-                        }
-                        catch(Exception e)
-                        {
+                        }catch(Exception e){
                             e.printStackTrace();
                         }
                     }
-                }
-                catch(Exception e){
+                }catch(Exception e){
                     e.printStackTrace();
                 }
             }
@@ -59,52 +48,29 @@ public class BingoClient{
         t.start();
     }
 
-    public void handleCards()
-    {
-        Thread t = new Thread(new Runnable()
-        {
-            public void run()
-            {
+    public void handleCards(){
+        Thread t = new Thread(new Runnable(){
+            public void run(){
                 controller.displayCards(numofCards, cardSets);
 
-                while(true)
-                {
+                while(true){
                     toServer.flush();
-                    //System.out.println("Run by " + Thread.currentThread().getName());
                     boolean win = controller.getBingoStatus();
-                    if(win)
-                    {
-                        //System.out.println("win");
+                    if(win){
                         int cardNumber = controller.getCardNumber();
                         int[] pattern = controller.getPattern();
-                        try
-                        {
-                            // toServer.println(Arrays.toString(pattern));
-                            // toServer.println(cardNumber);
-
+                        try{
                              String[] is = new String[interimSequence.size()];
                              is = interimSequence.toArray(is);
 
-                            // toServer.println(Arrays.toString(is));
-                            // System.out.println("sent");
-
-                            // String response = in.readLine();
-
                             boolean w = controller.checkWinningCondition(cardNumber, pattern, is, cardSets);
-                            //if(response.equals("Win"))
-                            if(w)
-                            {
-                                //controller.annouceWinner();
+                            if(w){
                                 toServer.println("W");
                             }
-                        }
-                        catch(Exception e)
-                        {
+                        }catch(Exception e){
                             e.printStackTrace();
                         } 
                     }
-
-
                 }
             }
         });
@@ -113,18 +79,13 @@ public class BingoClient{
         t.start();
     }
 
-    public void handleBingo()
-    {
-        Thread t = new Thread(new Runnable()
-        {
-            public void run()
-            {
+    public void handleBingo(){
+        Thread t = new Thread(new Runnable(){
+            public void run(){
                 while(true){
                     try{
                         String message = in.readLine();
-                        if(message != null)
-                        {
-                            //System.out.println("received message from server " + message);
+                        if(message != null){
                             if(message.charAt(0) == 'W'){
                                 controller.annouceWinner(message.substring(2));
                             }
@@ -143,18 +104,14 @@ public class BingoClient{
         t.start();
     }
 
-    public void handleChatMessages()
-    {
-        Thread t = new Thread(new Runnable()
-        {
-            public void run()
-            {
+    public void handleChatMessages(){
+        Thread t = new Thread(new Runnable(){
+            public void run(){
                 while(true){
                     toServer.flush();
                     try{
                         String chatBoxMessage = controller.getChatBoxMessage();
                         if(chatBoxMessage != null){
-                            //System.out.println("got message from controller");
                             toServer.println(": " + chatBoxMessage);
                             toServer.flush();
                             controller.resetMessage();
@@ -170,13 +127,12 @@ public class BingoClient{
         t.start();
     }       
 
-    public int[] convertCards(String array)
-    {
+    public int[] convertCards(String array){
         String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
         int[] convertedArray = new int[items.length];
 
         for (int i = 0; i < items.length; i++) {
-            try {
+            try{
                 convertedArray[i] = Integer.parseInt(items[i]);
             } catch (NumberFormatException nfe) {};
         }
@@ -184,25 +140,20 @@ public class BingoClient{
         return convertedArray;
     }
 
-    public String[] convertPattern(String array)
-    {
+    public String[] convertPattern(String array){
         String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
 
         return items;
     }
 
-    public void showPattern(String message, int[] pattern)
-    {
-        System.out.println(message);
-        for(int i = 0; i < 25; ++i)
-        {
+    public void showPattern(String message, int[] pattern){
+        for(int i = 0; i < 25; ++i){
             System.out.println(pattern[i] + " ");
         }
         System.out.println(" ");
     }
 
-	public static void main(String[] args) throws IOException
-	{
+	public static void main(String[] args) throws IOException{
         //handle socket connection with server
 		if (args.length != 2) {
             System.err.println(
@@ -213,13 +164,13 @@ public class BingoClient{
         String hostName = args[0];
         int portNumber = Integer.parseInt(args[1]);
 
-        try {
+        try{
             clientSocket = new Socket(hostName, portNumber);
             toServer = new PrintWriter(clientSocket.getOutputStream(), true);
             in = new BufferedReader(
                 new InputStreamReader(clientSocket.getInputStream()));
         }
-        catch (UnknownHostException e) {
+        catch (UnknownHostException e){
             System.err.println("Don't know about host " + hostName);
             System.exit(1);
         } catch (IOException e) {
@@ -239,8 +190,7 @@ public class BingoClient{
         if(fromServer.equals("full")){
             System.out.println("Full already.");
         }
-        else{
-            
+        else{  
             System.out.println(fromServer);
 
             cards = controller.displayMainPage();
@@ -249,16 +199,12 @@ public class BingoClient{
             toServer.flush();
 
             cardSets = new int[numofCards][];
-            for(int i = 0; i < numofCards; ++i)
-            {
-                try
-                {
+            for(int i = 0; i < numofCards; ++i){
+                try{
                     String cardSetInput = in.readLine();
-                    //System.out.println(cardSetInput);
                     cardSets[i] = client.convertCards(cardSetInput);
                 }
-                catch(Exception e)
-                {
+                catch(Exception e){
                     e.printStackTrace();
                 }
             }

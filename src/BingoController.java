@@ -14,99 +14,82 @@ public class BingoController implements Observer{
 	private int cardNumber = 0;
 	private String chatMessage = null;
 
-	public static void showPattern(String message, int[] pattern)
-	{
+	public static void showPattern(String message, int[] pattern){
 		System.out.println(message);
-		for(int i = 0; i < 25; ++i)
-		{
+		for(int i = 0; i < 25; ++i){
 			System.out.print(pattern[i] + " ");
 		}
 		System.out.println(" ");
 	}
 
-	public BingoController(Bingo model, BingoView view)
-	{
+	public BingoController(Bingo model, BingoView view){
 		this.model = model;
 		this.view = view;
 		view.addObserver(this);
 	}
 
-	public String displayMainPage()
-	{
+	public String displayMainPage(){
 		String card = view.displayMainPage();
 		return card;
 	}
 
-	public void displayCards(int numberOfCards, int[][] cards)
-	{
+	public void displayCards(int numberOfCards, int[][] cards){
 
 		view.displayCards(numberOfCards, cards);
 	}
 
-	public String[] getCallSequence()
-	{
+	public String[] getCallSequence(){
 		return model.getCallSequence();
 	}
 
-	public void updateDisplayNumber(String fromServer)
-	{
+	public void updateDisplayNumber(String fromServer){
 		view.updateDisplayNumber(fromServer);
 	}
 
-	public boolean getBingoStatus()
-	{
+	public boolean getBingoStatus(){
 		boolean status = bingoStatus;
 		bingoStatus = false;
 		return status;
 	}
 
-	public int[] getPattern()
-	{
+	public int[] getPattern(){
 		int[] pattern = bingoPattern;
 		//Arrays.fill(pattern, 0);
 		//showPattern("Controller getPattern", pattern);
 		return pattern;
 	}
 
-	public int getCardNumber()
-	{
+	public int getCardNumber(){
 		return cardNumber;
 	}
 
-	public String getChatBoxMessage()
-	{
+	public String getChatBoxMessage(){
 		//System.out.println("getChatBoxMessage called: " + chatMessage);
 		return chatMessage;
 	}
 
-	public void resetMessage()
-	{
+	public void resetMessage(){
 		chatMessage = null;
 	}
 
-	public void appendChatBox(String message)
-	{
+	public void appendChatBox(String message){
 		view.appendChatBox(message);
 	}
 
-	public boolean checkWinningCondition(int cardNumber, int[] pattern, String[] sequence, int[][] cardSet)
-	{
+	public boolean checkWinningCondition(int cardNumber, int[] pattern, String[] sequence, int[][] cardSet){
 		boolean validPattern = false;
 		boolean win = false;
 
 		int[] realSequence = new int[sequence.length];
-		for(int i = 0; i < sequence.length; ++i)
-		{
+		for(int i = 0; i < sequence.length; ++i){
 			realSequence[i] = Integer.parseInt(sequence[i].substring(1));
 		}
 
 		validPattern = model.checkPattern(pattern);
 		//disabled for the moment for fast win
-		if(validPattern)
-		{
+		if(validPattern){
 			ArrayList<Integer> subPattern = new ArrayList<Integer>();
-			for(int i = 0; i < pattern.length; ++i)
-			{
+			for(int i = 0; i < pattern.length; ++i){
 				if(pattern[i] == 1)
 				{
 					subPattern.add(cardSet[cardNumber][i]);
@@ -114,36 +97,27 @@ public class BingoController implements Observer{
 			}
 			return model.checkNumber(subPattern, realSequence);
 		}
-		else
-		{
+		else{
 			return false;
 		}
 
 		//return validPattern;
 	}
 
-	public void annouceWinner(String winner)
-	{
+	public void annouceWinner(String winner){
 		view.annouceWinner(winner);
 	}
 
 	//When user clicked Bingo, get the pattern
 	@Override
-	public void update(Observable o, Object arg)
-	{
-		System.out.println("received an object from observer");
-
-		if(arg instanceof BingoCard)
-		{
+	public void update(Observable o, Object arg){
+		if(arg instanceof BingoCard){
 			BingoCard card = (BingoCard)arg;
 			bingoPattern = card.getPattern();
 			cardNumber = card.getCardNumber();
-			//showPattern("Controller update", bingoPattern);
 			bingoStatus = true;
 		}
-		else if(arg instanceof String)
-		{
-			//System.out.println("is a string");
+		else if(arg instanceof String){
 			chatMessage = (String)arg;
 		}
 	}

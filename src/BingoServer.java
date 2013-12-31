@@ -13,8 +13,7 @@ public class BingoServer{
     private static final int maxClientCount = 2;
     private static final clientThread[] threads = new clientThread[maxClientCount];
 
-	public static void main(String[] args) throws IOException
-	{
+	public static void main(String[] args) throws IOException{
         // Initiating server port
 		if (args.length != 1) {
             System.err.println("Usage: java EchoServer <port number>");
@@ -46,6 +45,7 @@ public class BingoServer{
             }
         }
 
+        // create a thread for each client
         model = new Bingo();
         view = new BingoView();
         controller = new BingoController(model, view);
@@ -58,7 +58,6 @@ public class BingoServer{
                 threads[j].start();
             }
         }
- 
 	}
 }
 
@@ -76,32 +75,6 @@ class clientThread extends Thread{
         this.threads = threads;
         this.sequence = sequence;
         this.playerName = playerName;
-    }
-
-    public static int[] convertPattern(String array)
-    {
-        String[] items = array.replaceAll("\\[", "").replaceAll("\\]", "").split(", ");
-        int[] convertedPattern = new int[items.length];
-
-        //System.out.print("from convertPattern");
-        for (int i = 0; i < items.length; i++) {
-            try {
-                convertedPattern[i] = Integer.parseInt(items[i]);
-                //System.out.print(convertedPattern[i] + " ");
-            } catch (NumberFormatException nfe) {};
-        }
-
-        return convertedPattern;
-    }
-
-    public static void showPattern(String message, int[] pattern)
-    {
-        System.out.println(message);
-        for(int i = 0; i < 25; ++i)
-        {
-            System.out.print(pattern[i] + " ");
-        }
-        System.out.println(" ");
     }
 
     public void run(){
@@ -123,6 +96,9 @@ class clientThread extends Thread{
             out.println(outputLine);
 
             // Get input from client
+            // player's name and number of cards is packed into a string
+            // format: number of cards + player's name
+            // example: cards = "2yoonwaiyan" 
             cards = in.readLine();
             int numofCards = (int)(cards.charAt(0)) - 48;
             String playerName = cards.substring(1);
@@ -139,30 +115,25 @@ class clientThread extends Thread{
                 out.println(Arrays.toString(set));
             }
 
-            //get a list of randomized numbers to be called
-            
-            //System.out.println(Arrays.toString(sequence));
+            //send the call sequence to clients
             out.println(Arrays.toString(sequence));
             out.flush();
 
-            while(true)
-            {
+            //loop to receive messages from client
+            while(true){
                 String patternInput;
-                if((patternInput = in.readLine()) != null)
-                {
-
+                if((patternInput = in.readLine()) != null){
+                    // receive "win" message from client
                     if(patternInput.equals("W")){
-                        //System.out.println("Someone won the game");
                         for(int i = 0; i < threads.length; ++i){
                             threads[i].out.println("W " + playerName);
                         }
                     }
                     else if(patternInput.charAt(0) == ':'){
+                        //receive chat messages from client
                         String chatMessage = patternInput;
-                        //System.out.println("received message from client " + playerName + chatMessage);
                         for(int i = 0; i < threads.length; ++i){
                             threads[i].out.println("C " + playerName + chatMessage);
-                            //System.out.println("message sent to " + playerName);
                         }
                     }
                 }  
