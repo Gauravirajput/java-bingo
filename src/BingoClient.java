@@ -146,13 +146,6 @@ public class BingoClient{
         return items;
     }
 
-    public void showPattern(String message, int[] pattern){
-        for(int i = 0; i < 25; ++i){
-            System.out.println(pattern[i] + " ");
-        }
-        System.out.println(" ");
-    }
-
 	public static void main(String[] args) throws IOException{
         //handle socket connection with server
 		if (args.length != 2) {

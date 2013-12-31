@@ -69,6 +69,7 @@ class clientThread extends Thread{
     private Socket clientSocket = null;
     private final clientThread[] threads;
     private String playerName = null;
+    private static final int maxClientCount = 2;
 
     public clientThread(Socket clientSocket, clientThread[] threads, String[] sequence){
         this.clientSocket = clientSocket;
@@ -103,16 +104,29 @@ class clientThread extends Thread{
             int numofCards = (int)(cards.charAt(0)) - 48;
             String playerName = cards.substring(1);
             this.playerName = playerName;
-            System.out.println("Cards from client: " + numofCards);
 
             int[][] cardSet = new int[numofCards][];
-            //initialize array with n cards and 25 numbers for each card
+            //initialize array with numofCards and 25 numbers for each card
             for(int i = 0; i < numofCards; ++i)
             {
                 //generate one set of randomized numbers of each card
                 int[] set = model.generateCardSet();
                 cardSet[i] = set;
                 out.println(Arrays.toString(set));
+            }
+
+            //loop until both players are identified,
+            //and then start the game together
+            boolean start = false;
+            while(!start){
+                start = true;
+                for(int i = 0; i < maxClientCount; ++i){
+                    if(threads[i].playerName == null){
+                        start = false;
+                        break;
+                    }
+                }
+                System.out.println(start);
             }
 
             //send the call sequence to clients

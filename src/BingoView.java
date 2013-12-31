@@ -93,6 +93,7 @@ public class BingoView extends Observable implements View{
         public void actionPerformed(ActionEvent e){
             //System.out.println("fired from action listener");
             String message = chatbox.getText();
+            chatbox.setText("");
             setChanged();
             notifyObservers(message);
         }
