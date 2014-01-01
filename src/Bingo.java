@@ -6,6 +6,7 @@ public class Bingo{
 	public int cardNumber = 0;
 	public int[] cardPattern;
 
+	//randomize each column(B,I,N,G,O) and truncate into 5 numbers for each column
 	public int[][] getFullRandomizedSet(){
   		// storing the complete list of randomized card set
   		int[][] numbers = new int[5][15];
@@ -31,6 +32,7 @@ public class Bingo{
     	return numbers;	
   	}
 
+  	//randomize 75 numbers to be called and displayed
   	public String[] getCallSequence()
   	{
   		int[] numbers = new int[75];
@@ -75,6 +77,7 @@ public class Bingo{
     	return sequence;	
   	}
 
+  	// get the randomized set and put it into a 1d array instead of 2d array
 	public int[] generateCardSet()
 	{
 		//full set from 1 to 75
@@ -93,6 +96,7 @@ public class Bingo{
 		return cardSet;
 	}
 
+	//check the winning pattern with user's daubed numbers
 	public boolean checkPattern(int[] pattern){
 		boolean win = false;
 		//check winning pattern 1: horizontal lines
@@ -161,28 +165,21 @@ public class Bingo{
 		return win;
 	}
 
+	//check whether the winninng pattern are the numbers displayed to the players
 	public boolean checkNumber(ArrayList<Integer> subPattern, int[] sequence){
 		int count = 0;
-		System.out.println("checknumber:" + Arrays.toString(sequence));
 		for(int i = 0; i < subPattern.size(); ++i){
 			for(int j = 0; j < sequence.length; ++j){
-				System.out.printf("Comparing %d and %d ", subPattern.get(i), sequence[j]);
 				if(subPattern.get(i) == sequence[j]){
-					System.out.println(": Suceed\n");
 					count++;
-				}
-				else{
-					System.out.println(": Failure\n");
 				}
 			}
 		}
 
 		if(count >= subPattern.size()){
-			System.out.printf("Win with Count: %d \n", count);
 			return true;
 		}
 		else{
-			System.out.printf("Not Win with Count: %d \n", count);
 			return false;
 		}
 	}

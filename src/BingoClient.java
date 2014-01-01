@@ -21,6 +21,8 @@ public class BingoClient{
     public static String sequenceInput;
     public static ArrayList<String> interimSequence;
 
+    public static boolean cont = true;
+
     public void handleGUI(){
         Thread t = new Thread(new Runnable(){
             public void run(){
@@ -30,12 +32,14 @@ public class BingoClient{
                     String[] sequence = convertPattern(sequenceInput);
 
                     for(int i = 0; i < 75; ++i){
-                        try{
-                            Thread.sleep(5000);
-                            controller.updateDisplayNumber(sequence[i]);
-                            interimSequence.add(sequence[i]);
-                        }catch(Exception e){
-                            e.printStackTrace();
+                        if(cont){
+                            try{
+                                Thread.sleep(5000);
+                                controller.updateDisplayNumber(sequence[i]);
+                                interimSequence.add(sequence[i]);
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }catch(Exception e){
@@ -53,7 +57,7 @@ public class BingoClient{
             public void run(){
                 controller.displayCards(numofCards, cardSets);
 
-                while(true){
+                while(cont){
                     toServer.flush();
                     boolean win = controller.getBingoStatus();
                     if(win){
@@ -75,18 +79,19 @@ public class BingoClient{
             }
         });
 
-        t.setName("BINGO");
+        t.setName("cards");
         t.start();
     }
 
     public void handleBingo(){
         Thread t = new Thread(new Runnable(){
             public void run(){
-                while(true){
+                while(cont){
                     try{
                         String message = in.readLine();
                         if(message != null){
                             if(message.charAt(0) == 'W'){
+                                cont = false;
                                 controller.annouceWinner(message.substring(2));
                             }
                             else if(message.charAt(0) == 'C'){
@@ -107,7 +112,7 @@ public class BingoClient{
     public void handleChatMessages(){
         Thread t = new Thread(new Runnable(){
             public void run(){
-                while(true){
+                while(cont){
                     toServer.flush();
                     try{
                         String chatBoxMessage = controller.getChatBoxMessage();
@@ -211,6 +216,13 @@ public class BingoClient{
             client.handleGUI();
             client.handleBingo();
             client.handleChatMessages();
+
+            //close the socket connection, reader and writer
+            if(!cont){
+                clientSocket.close();
+                toServer.close();
+                in.close();
+            }
         }  
 	}
 }

@@ -70,6 +70,7 @@ class clientThread extends Thread{
     private final clientThread[] threads;
     private String playerName = null;
     private static final int maxClientCount = 2;
+    private static boolean cont = true;
 
     public clientThread(Socket clientSocket, clientThread[] threads, String[] sequence){
         this.clientSocket = clientSocket;
@@ -126,7 +127,7 @@ class clientThread extends Thread{
                         break;
                     }
                 }
-                System.out.println(start);
+                System.out.println("");
             }
 
             //send the call sequence to clients
@@ -134,13 +135,14 @@ class clientThread extends Thread{
             out.flush();
 
             //loop to receive messages from client
-            while(true){
+            while(cont){
                 String patternInput;
                 if((patternInput = in.readLine()) != null){
                     // receive "win" message from client
                     if(patternInput.equals("W")){
                         for(int i = 0; i < threads.length; ++i){
                             threads[i].out.println("W " + playerName);
+                            cont = false;
                         }
                     }
                     else if(patternInput.charAt(0) == ':'){
@@ -153,8 +155,24 @@ class clientThread extends Thread{
                 }  
             }
 
+            //close connection after someone won the game
+            for(int i = 0; i < maxClientCount; ++i){
+                threads[i].clientSocket.close();
+            }
+            out.close();
+            in.close();      
+
         }catch(IOException e){
-            e.printStackTrace();
+            //e.printStackTrace();
+            try{
+                for(int i = 0; i < maxClientCount; ++i){
+                    threads[i].clientSocket.close();
+                }
+                out.close();
+                in.close();  
+            }catch(IOException ex){
+                //ex.printStackTrace();
+            }  
         }
     }
 }
