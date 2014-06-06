@@ -1,5 +1,4 @@
 ### Simple Java Bingo
-==========
 This is a simple Bingo game built by Java with socket API that allows two players to play with each other.
 
 Requirements:
